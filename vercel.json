@@ -23,10 +23,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_API_BASE_URL": "@api_base_url",
-    "VITE_APP_NAME": "SkillPath India",
-    "VITE_APP_URL": "@app_url"
-  }
+  ]
 }
