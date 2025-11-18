@@ -15,10 +15,10 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "SkillPath India"
+args = "CorpReady"
 
 [[workflows.workflow]]
-name = "SkillPath India"
+name = "CorpReady"
 author = "agent"
 
 [[workflows.workflow.tasks]]
@@ -36,7 +36,3 @@ externalPort = 3001
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 37835
-externalPort = 3000
