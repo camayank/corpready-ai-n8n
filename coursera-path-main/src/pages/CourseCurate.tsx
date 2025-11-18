@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,8 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle, Send } from "lucide-react";
+import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle, Send, Search, Eye, ThumbsUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { youtubeService, YouTubeVideo } from "@/services/youtube.service";
+import { YouTubeVideoCard } from "@/components/YouTubeVideoCard";
 
 const CourseCurate = () => {
   const navigate = useNavigate();
@@ -24,6 +26,9 @@ const CourseCurate = () => {
   const [curatedCourses, setCuratedCourses] = useState<any[]>([]);
   const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant', content: string }>>([]);
   const [currentMessage, setCurrentMessage] = useState('');
+  const [previewVideos, setPreviewVideos] = useState<YouTubeVideo[]>([]);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [youtubeConfigured, setYoutubeConfigured] = useState(true);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -58,6 +63,49 @@ const CourseCurate = () => {
     "Node.js",
     "Data Science",
   ];
+
+  // Check YouTube API configuration on mount
+  useEffect(() => {
+    checkYouTubeConfig();
+  }, []);
+
+  // Load preview videos when learning topic changes
+  useEffect(() => {
+    if (formData.learningTopic && formData.learningTopic.length > 3) {
+      loadPreviewVideos();
+    }
+  }, [formData.learningTopic]);
+
+  const checkYouTubeConfig = async () => {
+    try {
+      const configured = await youtubeService.checkConfiguration();
+      setYoutubeConfigured(configured);
+      if (!configured) {
+        console.warn('YouTube API is not configured');
+      }
+    } catch (error) {
+      console.error('Failed to check YouTube configuration:', error);
+      setYoutubeConfigured(false);
+    }
+  };
+
+  const loadPreviewVideos = async () => {
+    if (!youtubeConfigured || !formData.learningTopic) return;
+
+    setIsLoadingPreview(true);
+    try {
+      const videos = await youtubeService.searchEducationalVideos(
+        formData.learningTopic,
+        6
+      );
+      setPreviewVideos(videos);
+    } catch (error) {
+      console.error('Failed to load preview videos:', error);
+      setPreviewVideos([]);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
 
   const handleGenerate = async () => {
     if (!formData.userType || !formData.learningTopic || !formData.reason) {
@@ -94,9 +142,9 @@ const CourseCurate = () => {
 
       const data = await response.json();
 
-      // Parse n8n response
+      // Parse n8n response and enrich with YouTube data
       // The workflow returns formatted learning pathway with topics and videos
-      const parsedCourses = parseN8NResponse(data);
+      const parsedCourses = await parseN8NResponse(data);
 
       setCuratedCourses(parsedCourses);
       setIsGenerating(false);
@@ -123,7 +171,62 @@ const CourseCurate = () => {
     }
   };
 
-  const parseN8NResponse = (data: any) => {
+  const enrichVideosWithYouTubeData = async (courses: any[]) => {
+    if (!youtubeConfigured) return courses;
+
+    try {
+      const enrichedCourses = await Promise.all(
+        courses.map(async (course) => {
+          if (!course.videos || course.videos.length === 0) return course;
+
+          const videoIds = course.videos.map((v: any) => v.id || v.videoId).filter(Boolean);
+          if (videoIds.length === 0) return course;
+
+          try {
+            const youtubeVideos = await youtubeService.getVideoDetails(videoIds);
+            const videoMap = new Map(youtubeVideos.map(v => [v.id, v]));
+
+            const enrichedVideos = course.videos.map((video: any) => {
+              const ytData = videoMap.get(video.id || video.videoId);
+              if (!ytData) return video;
+
+              return {
+                ...video,
+                title: ytData.title,
+                duration: ytData.durationFormatted || video.duration,
+                thumbnail: ytData.thumbnail.high,
+                channelTitle: ytData.channelTitle,
+                viewCount: ytData.viewCountFormatted,
+                likeCount: ytData.likeCount ? formatLikes(parseInt(ytData.likeCount)) : null,
+                description: ytData.description,
+              };
+            });
+
+            return {
+              ...course,
+              videos: enrichedVideos,
+            };
+          } catch (error) {
+            console.error('Error enriching videos for course:', course.id, error);
+            return course;
+          }
+        })
+      );
+
+      return enrichedCourses;
+    } catch (error) {
+      console.error('Error enriching courses with YouTube data:', error);
+      return courses;
+    }
+  };
+
+  const formatLikes = (likes: number): string => {
+    if (likes >= 1000000) return `${(likes / 1000000).toFixed(1)}M`;
+    if (likes >= 1000) return `${(likes / 1000).toFixed(1)}K`;
+    return likes.toString();
+  };
+
+  const parseN8NResponse = async (data: any) => {
     // Parse the n8n workflow response
     // Expected structure: topics with YouTube videos
     try {
@@ -152,7 +255,11 @@ const CourseCurate = () => {
         });
       }
 
-      return courses.length > 0 ? courses : generateMockCourses();
+      const baseCourses = courses.length > 0 ? courses : generateMockCourses();
+
+      // Enrich with real YouTube data
+      const enrichedCourses = await enrichVideosWithYouTubeData(baseCourses);
+      return enrichedCourses;
     } catch (error) {
       console.error('Error parsing n8n response:', error);
       return generateMockCourses();
@@ -298,6 +405,61 @@ const CourseCurate = () => {
               </Badge>
             ))}
           </div>
+
+          {/* YouTube Video Preview */}
+          {formData.learningTopic && previewVideos.length > 0 && (
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Search className="w-4 h-4 text-primary" />
+                <h4 className="font-semibold text-sm">Sample videos for "{formData.learningTopic}"</h4>
+              </div>
+              <div className="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
+                {previewVideos.slice(0, 4).map((video) => (
+                  <div key={video.id} className="relative group">
+                    <img
+                      src={video.thumbnail.medium}
+                      alt={video.title}
+                      className="w-full h-24 object-cover rounded-lg"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center p-2">
+                      <p className="text-white text-xs font-medium line-clamp-2 mb-1">{video.title}</p>
+                      <div className="flex gap-2 text-white text-xs">
+                        {video.viewCountFormatted && (
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3 h-3" />
+                            {video.viewCountFormatted}
+                          </span>
+                        )}
+                        {video.durationFormatted && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {video.durationFormatted}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {video.durationFormatted && (
+                      <Badge className="absolute bottom-2 right-2 text-xs bg-black/80 text-white">
+                        {video.durationFormatted}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                These are just samples. Our AI will curate a complete learning path for you!
+              </p>
+            </div>
+          )}
+
+          {isLoadingPreview && formData.learningTopic && (
+            <div className="mt-4 text-center">
+              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                <Sparkles className="w-4 h-4 animate-pulse" />
+                Loading video previews...
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
@@ -376,54 +538,98 @@ const CourseCurate = () => {
         <p className="text-muted-foreground">AI curated {curatedCourses.length} courses based on your profile</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {curatedCourses.map((course) => (
           <Card key={course.id} className="p-6 shadow-medium hover:shadow-large transition-all">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-48 h-32 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <Play className="w-12 h-12 text-white" />
+            <div className="mb-6">
+              <Badge className="mb-2">{course.category}</Badge>
+              <h3 className="text-xl font-bold mb-2">{course.title}</h3>
+              <p className="text-muted-foreground text-sm mb-4">{course.description}</p>
+
+              <div className="flex flex-wrap gap-3 mb-4">
+                <div className="flex items-center gap-1 text-sm">
+                  <Play className="w-4 h-4 text-primary" />
+                  <span>{course.videos.length} videos</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm">
+                  <Clock className="w-4 h-4 text-primary" />
+                  <span>{course.totalDuration}</span>
+                </div>
+                <Badge variant="outline">{course.difficulty}</Badge>
               </div>
-              <div className="flex-1">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <Badge className="mb-2">{course.category}</Badge>
-                    <h3 className="text-xl font-bold mb-2">{course.title}</h3>
+
+              <Card className="p-3 bg-accent/5 border-accent/20 mb-4">
+                <div className="flex items-start gap-2">
+                  <Target className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-semibold text-foreground">Why this was curated: </span>
+                    {course.aiReason}
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm mb-4">{course.description}</p>
+              </Card>
+            </div>
 
-                <div className="flex flex-wrap gap-3 mb-4">
-                  <div className="flex items-center gap-1 text-sm">
-                    <Play className="w-4 h-4 text-primary" />
-                    <span>{course.videos.length} videos</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span>{course.totalDuration}</span>
-                  </div>
-                  <Badge variant="outline">{course.difficulty}</Badge>
-                </div>
-
-                <Card className="p-3 bg-accent/5 border-accent/20 mb-4">
-                  <div className="flex items-start gap-2">
-                    <Target className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-                    <div className="text-xs text-muted-foreground">
-                      <span className="font-semibold text-foreground">Why this was curated: </span>
-                      {course.aiReason}
+            {/* YouTube Video Grid */}
+            {course.videos && course.videos.length > 0 && (
+              <div className="mb-6">
+                <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                  <Play className="w-4 h-4 text-primary" />
+                  Course Videos ({course.videos.length})
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {course.videos.map((video: any) => (
+                    <div key={video.id} className="group">
+                      <div className="relative rounded-lg overflow-hidden mb-2">
+                        <img
+                          src={video.thumbnail || `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
+                          alt={video.title}
+                          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <Play className="w-10 h-10 text-white" />
+                        </div>
+                        {video.duration && (
+                          <Badge className="absolute bottom-2 right-2 text-xs bg-black/80 text-white">
+                            {video.duration}
+                          </Badge>
+                        )}
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-sm line-clamp-2 mb-1">{video.title}</h5>
+                        {video.channelTitle && (
+                          <p className="text-xs text-muted-foreground mb-2">{video.channelTitle}</p>
+                        )}
+                        {(video.viewCount || video.likeCount) && (
+                          <div className="flex gap-3 text-xs text-muted-foreground">
+                            {video.viewCount && (
+                              <span className="flex items-center gap-1">
+                                <Eye className="w-3 h-3" />
+                                {video.viewCount}
+                              </span>
+                            )}
+                            {video.likeCount && (
+                              <span className="flex items-center gap-1">
+                                <ThumbsUp className="w-3 h-3" />
+                                {video.likeCount}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Card>
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="hero"
-                    onClick={() => navigate(`/app/course/${course.id}`, { state: { course } })}
-                  >
-                    Start Learning
-                  </Button>
-                  <Button variant="outline">Save for Later</Button>
+                  ))}
                 </div>
               </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button
+                variant="hero"
+                onClick={() => navigate(`/app/course/${course.id}`, { state: { course } })}
+              >
+                Start Learning
+              </Button>
+              <Button variant="outline">Save for Later</Button>
             </div>
           </Card>
         ))}
