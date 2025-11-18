@@ -16,4 +16,7 @@ router.post('/reset-password', authController.resetPassword);
 router.post('/change-password', authenticate, authController.changePassword);
 router.get('/me', authenticate, authController.getMe);
 
+// Development-only endpoint (only works when NODE_ENV=development)
+router.post('/dev-login', authController.devLogin);
+
 export default router;

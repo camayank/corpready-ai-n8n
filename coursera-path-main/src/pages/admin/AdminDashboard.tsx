@@ -2,9 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Users, BookOpen, GraduationCap, Briefcase, TrendingUp, AlertCircle, Activity, CheckCircle, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -161,7 +163,12 @@ export const AdminDashboard = () => {
                   Review and approve or reject internship listings
                 </p>
               </div>
-              <Button variant="outline" size="sm" className="border-orange-200 text-orange-700 hover:bg-orange-100">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-orange-200 text-orange-700 hover:bg-orange-100"
+                onClick={() => navigate('/admin/internships')}
+              >
                 Review
               </Button>
             </div>
@@ -176,7 +183,12 @@ export const AdminDashboard = () => {
                   Welcome new users and monitor onboarding completion
                 </p>
               </div>
-              <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-100">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-blue-200 text-blue-700 hover:bg-blue-100"
+                onClick={() => navigate('/admin/users')}
+              >
                 View Users
               </Button>
             </div>
