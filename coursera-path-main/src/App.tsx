@@ -36,6 +36,7 @@ import Settings from "./pages/Settings";
 // Layout Components
 import { UserLayout } from "./components/layout/UserLayout";
 import { AdminLayout } from "./components/admin/AdminLayout";
+import { ErrorBoundary } from "./components/error-boundary/ErrorBoundary";
 
 // Admin Pages
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
@@ -53,7 +54,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
+          <ErrorBoundary>
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/signin" element={<SignIn />} />
@@ -127,6 +129,7 @@ const App = () => (
             {/* Catch-all 404 route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </ErrorBoundary>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
