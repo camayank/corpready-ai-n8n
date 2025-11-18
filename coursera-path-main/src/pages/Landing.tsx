@@ -4,107 +4,90 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Sparkles,
-  Trophy,
-  Users,
-  TrendingUp,
   CheckCircle,
   ArrowRight,
   Play,
   Clock,
-  Target,
   Award,
-  Briefcase,
   Star,
   GraduationCap,
   Zap,
   Rocket,
   BookOpen,
+  Youtube,
+  Brain,
+  Target,
+  Trophy,
+  ListChecks,
+  Video,
 } from "lucide-react";
 
 const Landing = () => {
-  const tracks = [
+  const features = [
     {
-      title: "Data Analytics",
-      description: "Master data analysis, visualization, and insights",
-      icon: TrendingUp,
-      courses: 24,
-      students: "12k+",
-      difficulty: "Beginner to Advanced",
+      title: "AI-Curated Learning Paths",
+      description: "Tell us what you want to learn. Our AI creates personalized learning pathways from thousands of YouTube videos.",
+      icon: Brain,
+      highlight: "Smart curation",
     },
     {
-      title: "Web Development",
-      description: "Build modern, responsive web applications",
-      icon: BookOpen,
-      courses: 32,
-      students: "18k+",
-      difficulty: "Beginner to Advanced",
+      title: "YouTube-Powered Content",
+      description: "Access expert-created video content from top creators. Learn from the best without the noise.",
+      icon: Youtube,
+      highlight: "Quality content",
     },
     {
-      title: "Digital Marketing",
-      description: "Learn SEO, social media, and growth strategies",
-      icon: Target,
-      courses: 18,
-      students: "9k+",
-      difficulty: "Beginner to Intermediate",
+      title: "Structured Pathways",
+      description: "No more scattered learning. Get organized modules with clear progression from beginner to expert.",
+      icon: ListChecks,
+      highlight: "Clear roadmap",
     },
   ];
 
   const steps = [
     {
       number: "01",
-      title: "AI-Powered Skill Mapping",
-      description:
-        "Tell us your career goals. Our AI creates a personalized learning path with the most relevant skills for your dream role.",
-      icon: Zap,
+      title: "Describe Your Goal",
+      description: "Tell our AI what you want to learn, your background, and your objectives. Be as specific or broad as you like.",
+      icon: Target,
     },
     {
       number: "02",
-      title: "Learn & Certify",
-      description:
-        "Complete AI-curated courses and assessments. Earn industry-recognized certificates that prove your expertise to employers.",
-      icon: Trophy,
+      title: "Get Curated Pathway",
+      description: "Receive a structured learning path with hand-picked YouTube videos organized into progressive modules.",
+      icon: Sparkles,
     },
     {
       number: "03",
-      title: "Land Opportunities",
-      description:
-        "Access curated internships and job opportunities from top companies. Your verified skills open doors to success.",
-      icon: Rocket,
+      title: "Learn & Achieve",
+      description: "Follow your personalized pathway, track progress, and earn certificates to prove your new skills.",
+      icon: Trophy,
     },
   ];
 
-  const testimonials = [
+  const useCases = [
     {
-      name: "Priya Sharma",
-      role: "L&D Manager",
-      college: "TechCorp Solutions",
-      quote:
-        "CorpReady transformed our workforce development. Our team's productivity increased by 40% in just 3 months!",
-      rating: 5,
+      title: "Career Switchers",
+      description: "Moving to a new field? Get a complete learning roadmap tailored to your transition goals.",
+      icon: Rocket,
     },
     {
-      name: "Arjun Patel",
-      role: "Marketing Professional",
-      college: "Mumbai University",
-      quote:
-        "From zero to corporate-ready! CorpReady's personalized approach helped me master digital marketing and secure a role at a top startup.",
-      rating: 5,
+      title: "Skill Upgraders",
+      description: "Stay current in your field with curated content on the latest trends and technologies.",
+      icon: TrendingUp,
     },
     {
-      name: "Sneha Reddy",
-      role: "Engineering Graduate",
-      college: "IIT Hyderabad",
-      quote:
-        "The AI-powered assessments and industry-recognized certificates gave me an edge. Recruiters were impressed with my verified skill portfolio!",
-      rating: 5,
+      title: "Students & Graduates",
+      description: "Complement your education with practical, industry-relevant skills from real-world experts.",
+      icon: GraduationCap,
     },
   ];
 
   const stats = [
-    { value: "50k+", label: "Career Builders" },
-    { value: "200+", label: "Skill Programs" },
-    { value: "1000+", label: "Opportunities" },
-    { value: "95%", label: "Placement Success" },
+    { value: "AI-Powered", label: "Course Curation" },
+    { value: "YouTube", label: "Video Content" },
+    { value: "Personalized", label: "Learning Paths" },
+    { value: "Certificates", label: "Proof of Skills" },
   ];
 
   return (
@@ -118,21 +101,18 @@ const Landing = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-bold leading-tight">CorpReady</span>
-              <span className="text-[9px] text-muted-foreground -mt-0.5">Build Your Career</span>
+              <span className="text-[9px] text-muted-foreground -mt-0.5">Learning Pathways</span>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="#skills" className="text-sm font-medium hover:text-primary transition-colors">
-              Upskill
+            <Link to="#features" className="text-sm font-medium hover:text-primary transition-colors">
+              Features
             </Link>
-            <Link to="#opportunities" className="text-sm font-medium hover:text-primary transition-colors">
-              Opportunities
+            <Link to="#how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
+              How It Works
             </Link>
-            <Link to="#mentorship" className="text-sm font-medium hover:text-primary transition-colors">
-              Career Guidance
-            </Link>
-            <Link to="#companies" className="text-sm font-medium hover:text-primary transition-colors">
-              For Companies
+            <Link to="#use-cases" className="text-sm font-medium hover:text-primary transition-colors">
+              Use Cases
             </Link>
           </nav>
           <div className="flex items-center gap-3">
@@ -143,7 +123,7 @@ const Landing = () => {
             </Link>
             <Link to="/signup">
               <Button variant="hero" size="sm" className="shadow-medium hover:shadow-large transition-shadow">
-                Get Started Free
+                Start Free
               </Button>
             </Link>
           </div>
@@ -156,27 +136,28 @@ const Landing = () => {
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-6 bg-accent/10 text-accent border-accent/20">
-              🚀 AI-Powered Corporate Training Platform
+              <Sparkles className="w-3 h-3 mr-1 inline" />
+              AI-Powered Learning Curation
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              From Campus to
+              Your Personalized
               <br />
-              <span className="bg-gradient-hero bg-clip-text text-transparent">Corporate Success</span>
+              <span className="bg-gradient-hero bg-clip-text text-transparent">Learning Pathway</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Master in-demand skills with AI-curated learning paths. Earn verified certificates and land your dream
-              opportunities—all in one platform.
+              Stop wasting time searching for learning resources. Get AI-curated learning paths from YouTube's
+              best content, organized into structured modules tailored to your goals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">
                 <Button variant="hero" size="lg" className="text-base px-8 shadow-medium hover:shadow-large transition-all">
-                  Start Your Journey
+                  Create My Learning Path
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Button variant="outline" size="lg" className="text-base px-8 shadow-soft hover:shadow-medium transition-all">
                 <Play className="mr-2 w-5 h-5" />
-                See How It Works
+                See Example
               </Button>
             </div>
 
@@ -184,7 +165,7 @@ const Landing = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center p-4 rounded-xl hover:bg-muted/50 transition-colors">
-                  <div className="text-3xl md:text-4xl font-bold text-primary mb-1">{stat.value}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-primary mb-1">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
@@ -193,27 +174,57 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Features */}
+      <section id="features" className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Why Choose Us</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Learning Made Simple</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              No more endless searching. No more scattered bookmarks. Just focused, personalized learning.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={feature.title} className="p-8 shadow-medium hover:shadow-large transition-shadow">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-hero mb-6 flex items-center justify-center">
+                    <Icon className="w-7 h-7 text-white" />
+                  </div>
+                  <Badge className="mb-3 bg-secondary/10 text-secondary border-secondary/20 text-xs">
+                    {feature.highlight}
+                  </Badge>
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
-      <section className="py-20 bg-muted/30">
+      <section id="how-it-works" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-secondary/10 text-secondary border-secondary/20">How It Works</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Journey to Success</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">From Goal to Growth in 3 Steps</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              From learning to landing opportunities, we guide you every step of the way
+              A streamlined process to turn your learning goals into structured action
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {steps.map((step) => {
               const Icon = step.icon;
               return (
-                <Card key={step.number} className="p-8 text-center shadow-medium hover:shadow-large transition-shadow">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-hero mx-auto mb-6 flex items-center justify-center">
+                <Card key={step.number} className="p-8 text-center shadow-medium hover:shadow-large transition-shadow relative overflow-hidden">
+                  <div className="absolute top-0 right-0 text-8xl font-bold text-muted-foreground/5">{step.number}</div>
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-hero mx-auto mb-6 flex items-center justify-center relative z-10">
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="text-4xl font-bold text-muted-foreground/30 mb-3">{step.number}</div>
-                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
+                  <h3 className="text-xl font-bold mb-3 relative z-10">{step.title}</h3>
+                  <p className="text-muted-foreground relative z-10">{step.description}</p>
                 </Card>
               );
             })}
@@ -221,88 +232,32 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Learning Tracks */}
-      <section className="py-20">
+      {/* Use Cases */}
+      <section id="use-cases" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Popular Tracks</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Learning Path</h2>
+            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Use Cases</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Perfect For Every Learner</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Explore curated learning tracks designed for Indian students
+              Whether you're starting fresh or leveling up, we've got you covered
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {tracks.map((track) => {
-              const Icon = track.icon;
+            {useCases.map((useCase) => {
+              const Icon = useCase.icon;
               return (
                 <Card
-                  key={track.title}
+                  key={useCase.title}
                   className="p-6 hover:shadow-large transition-all hover:-translate-y-1 cursor-pointer group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-primary/10 group-hover:bg-gradient-hero transition-all flex items-center justify-center mb-4">
                     <Icon className="w-6 h-6 text-primary group-hover:text-white transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{track.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">{track.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge variant="secondary" className="text-xs">
-                      {track.courses} courses
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {track.students} students
-                    </Badge>
-                  </div>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {track.difficulty}
-                  </div>
+                  <h3 className="text-xl font-bold mb-2">{useCase.title}</h3>
+                  <p className="text-muted-foreground text-sm">{useCase.description}</p>
                 </Card>
               );
             })}
-          </div>
-          <div className="text-center mt-10">
-            <Link to="/signup">
-              <Button variant="outline" size="lg">
-                View All Tracks
-                <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Success Stories</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Loved by Students Across India</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of students who transformed their careers
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.name} className="p-6 shadow-medium">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                  ))}
-                </div>
-                <p className="text-sm mb-6 leading-relaxed">{testimonial.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-hero flex items-center justify-center text-white font-bold">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">{testimonial.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {testimonial.role} • {testimonial.college}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
           </div>
         </div>
       </section>
@@ -310,109 +265,49 @@ const Landing = () => {
       {/* CTA Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <Card className="p-12 md:p-16 text-center bg-gradient-hero shadow-large">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
-            <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              Join 50,000+ students learning smarter with AI-powered courses
-            </p>
-            <Link to="/signup">
-              <Button variant="secondary" size="lg" className="text-base px-8">
-                Get Started Free
-                <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
+          <Card className="max-w-4xl mx-auto p-12 text-center bg-gradient-hero shadow-large">
+            <div className="mb-6">
+              <Zap className="w-16 h-16 text-white mx-auto mb-4" />
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Ready to Start Your Learning Journey?
+              </h2>
+              <p className="text-white/90 text-lg max-w-2xl mx-auto">
+                Join thousands of learners who've found their path. Get your personalized learning roadmap in minutes.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/signup">
+                <Button size="lg" variant="secondary" className="text-base px-8">
+                  Create Free Account
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/signin">
+                <Button size="lg" variant="outline" className="text-base px-8 bg-white/10 text-white border-white/20 hover:bg-white/20">
+                  Sign In
+                </Button>
+              </Link>
+            </div>
           </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-muted/30 py-12">
+      <footer className="border-t py-12 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-lg font-bold">CorpReady</span>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                AI-powered corporate training platform transforming workforce development.
-              </p>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold leading-tight">CorpReady</span>
+                <span className="text-[9px] text-muted-foreground -mt-0.5">Learning Pathways</span>
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold mb-3">Platform</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Browse Courses
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Find Internships
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Meet Mentors
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Pricing
-                  </Link>
-                </li>
-              </ul>
+            <div className="text-sm text-muted-foreground">
+              © 2025 CorpReady. All rights reserved.
             </div>
-            <div>
-              <h4 className="font-semibold mb-3">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    For Institutions
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">Legal</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="hover:text-primary transition-colors">
-                    Refund Policy
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2025 CorpReady by corpready.in. All rights reserved.</p>
           </div>
         </div>
       </footer>
