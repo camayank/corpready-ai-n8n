@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middleware/auth';
-import { prisma } from '../../lib/prisma';
+import prisma from '../../utils/db';
 import { createAuditLog, getIpAddress, AuditActions, TargetTypes } from '../../utils/auditLog';
 
 // Get all internships with filters

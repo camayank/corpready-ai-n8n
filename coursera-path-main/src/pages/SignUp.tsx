@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { BookOpen, Mail, Lock, User } from "lucide-react";
+import { GraduationCap, Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -46,7 +46,7 @@ const SignUp = () => {
         <div>
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <BookOpen className="w-6 h-6" />
+              <GraduationCap className="w-6 h-6" />
             </div>
             <span className="text-2xl font-bold">CorpReady</span>
           </Link>
@@ -96,7 +96,7 @@ const SignUp = () => {
             <div className="lg:hidden mb-6">
               <Link to="/" className="flex items-center gap-2 justify-center">
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-white" />
+                  <GraduationCap className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold">CorpReady</span>
               </Link>

@@ -9,7 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 
 // Guards
 import { AuthGuard } from "@/components/guards/AuthGuard";
-// import { EmailVerifiedGuard } from "@/components/guards/EmailVerifiedGuard"; // Disabled - email verification not required
+import { EmailVerifiedGuard } from "@/components/guards/EmailVerifiedGuard";
 import { OnboardingGuard } from "@/components/guards/OnboardingGuard";
 import { AdminGuard } from "@/components/guards/AdminGuard";
 
@@ -64,36 +64,22 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Email Verification (requires auth) */}
+            {/* Email Verification (DEMO MODE: guard temporarily disabled) */}
             <Route
               path="/verify-email"
-              element={
-                <AuthGuard>
-                  <VerifyEmail />
-                </AuthGuard>
-              }
+              element={<VerifyEmail />}
             />
 
-            {/* Onboarding (requires auth only - email verification disabled) */}
+            {/* Onboarding (DEMO MODE: guard temporarily disabled) */}
             <Route
               path="/onboarding"
-              element={
-                <AuthGuard>
-                  <Onboarding />
-                </AuthGuard>
-              }
+              element={<Onboarding />}
             />
 
-            {/* Protected App Routes (requires auth + onboarding complete) */}
+            {/* Protected App Routes (DEMO MODE: guards temporarily disabled) */}
             <Route
               path="/app"
-              element={
-                <AuthGuard>
-                  <OnboardingGuard>
-                    <UserLayout />
-                  </OnboardingGuard>
-                </AuthGuard>
-              }
+              element={<UserLayout />}
             >
               <Route index element={<Dashboard />} />
               <Route path="curate" element={<CourseCurate />} />
@@ -105,16 +91,10 @@ const App = () => (
               <Route path="settings" element={<Settings />} />
             </Route>
 
-            {/* Admin Routes (requires admin role) */}
+            {/* Admin Routes (DEMO MODE: guards temporarily disabled) */}
             <Route
               path="/admin"
-              element={
-                <AuthGuard>
-                  <AdminGuard>
-                    <AdminLayout />
-                  </AdminGuard>
-                </AuthGuard>
-              }
+              element={<AdminLayout />}
             >
               <Route index element={<AdminDashboard />} />
               <Route path="users" element={<UsersManagement />} />
