@@ -9,13 +9,7 @@ import {
   Users,
   BookOpen,
   Video,
-  GraduationCap,
   Briefcase,
-  UserCheck,
-  DollarSign,
-  Key,
-  BarChart3,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -27,16 +21,9 @@ import { cn } from '@/lib/utils';
 const navigationItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/users', label: 'Users', icon: Users },
+  { path: '/admin/internships', label: 'Internships', icon: Briefcase },
   { path: '/admin/domains', label: 'Domains & Topics', icon: BookOpen },
   { path: '/admin/courses', label: 'Courses', icon: Video },
-  { path: '/admin/quizzes', label: 'Quizzes', icon: GraduationCap },
-  { path: '/admin/certificates', label: 'Certificates', icon: GraduationCap },
-  { path: '/admin/internships', label: 'Internships', icon: Briefcase },
-  { path: '/admin/mentors', label: 'Mentors', icon: UserCheck },
-  { path: '/admin/payments', label: 'Payments', icon: DollarSign },
-  { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/admin/ai-engines', label: 'AI Engines', icon: Key },
-  { path: '/admin/audit-logs', label: 'Audit Logs', icon: Settings },
 ];
 
 export const AdminLayout = () => {
