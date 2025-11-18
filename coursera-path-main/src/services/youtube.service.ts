@@ -131,7 +131,7 @@ class YouTubeService {
 
       return response.configured;
     } catch (error) {
-      console.error('YouTube config check error:', error);
+      // Silently return false if backend is unavailable
       return false;
     }
   }

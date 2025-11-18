@@ -14,7 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Start backend in background
 echo "🔧 Starting backend server on port 3000..."
-(cd "$SCRIPT_DIR/backend" && npm run dev) > /tmp/backend.log 2>&1 &
+(cd "$SCRIPT_DIR/backend" && NODE_ENV=development npm run dev) > /tmp/backend.log 2>&1 &
 BACKEND_PID=$!
 
 # Wait for backend to be ready

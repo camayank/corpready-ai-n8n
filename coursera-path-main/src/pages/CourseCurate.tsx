@@ -86,11 +86,8 @@ const CourseCurate = () => {
     try {
       const configured = await youtubeService.checkConfiguration();
       setYoutubeConfigured(configured);
-      if (!configured) {
-        console.warn('YouTube API is not configured');
-      }
     } catch (error) {
-      console.error('Failed to check YouTube configuration:', error);
+      // Silently handle configuration check failure
       setYoutubeConfigured(false);
     }
   };
@@ -177,7 +174,7 @@ const CourseCurate = () => {
         description: "Your personalized learning path has been generated",
       });
     } catch (error: any) {
-      console.error('N8N workflow error:', error);
+      // Silently handle N8N errors and show user-friendly feedback
 
       setIsGenerating(false);
 
