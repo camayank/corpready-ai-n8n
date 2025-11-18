@@ -9,11 +9,13 @@ pkill -f "vite" 2>/dev/null || true
 pkill -f "n8n" 2>/dev/null || true
 sleep 2
 
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Start backend in background
 echo "🔧 Starting backend server on port 3000..."
-cd backend && npm run dev > /tmp/backend.log 2>&1 &
+(cd "$SCRIPT_DIR/backend" && npm run dev) > /tmp/backend.log 2>&1 &
 BACKEND_PID=$!
-cd ..
 
 # Wait for backend to be ready
 echo "⏳ Waiting for backend..."
@@ -27,7 +29,7 @@ done
 
 # Start frontend in foreground (must be on port 5000 for Replit)
 echo "🎨 Starting frontend on port 5000..."
-cd coursera-path-main && npm run dev
+cd "$SCRIPT_DIR/coursera-path-main" && exec npm run dev
 
 # Cleanup on exit
 trap "kill $BACKEND_PID 2>/dev/null" EXIT
