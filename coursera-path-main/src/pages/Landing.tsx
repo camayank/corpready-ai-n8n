@@ -18,6 +18,7 @@ import {
   GraduationCap,
   Zap,
   Rocket,
+  BookOpen,
 } from "lucide-react";
 
 const Landing = () => {
@@ -75,10 +76,10 @@ const Landing = () => {
   const testimonials = [
     {
       name: "Priya Sharma",
-      role: "Computer Science Student",
-      college: "Delhi University",
+      role: "L&D Manager",
+      college: "TechCorp Solutions",
       quote:
-        "CorpReady transformed my career journey! The AI-curated learning path and verified certificates helped me land my dream internship in just 3 weeks.",
+        "CorpReady transformed our workforce development. Our team's productivity increased by 40% in just 3 months!",
       rating: 5,
     },
     {
@@ -154,9 +155,8 @@ const Landing = () => {
         <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 bg-accent/10 text-accent border-accent/20 shadow-soft">
-              <Rocket className="w-3 h-3 inline mr-1" />
-              AI-Powered Corporate Readiness Platform
+            <Badge className="mb-6 bg-accent/10 text-accent border-accent/20">
+              🚀 AI-Powered Corporate Training Platform
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               From Campus to
@@ -334,10 +334,10 @@ const Landing = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold">SkillPath India</span>
+                <span className="text-lg font-bold">CorpReady</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                AI-powered learning platform connecting Indian students to skills and opportunities.
+                AI-powered corporate training platform transforming workforce development.
               </p>
             </div>
             <div>
@@ -412,7 +412,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2025 SkillPath India. All rights reserved. Made with ❤️ for Indian students.</p>
+            <p>© 2025 CorpReady by corpready.in. All rights reserved.</p>
           </div>
         </div>
       </footer>
