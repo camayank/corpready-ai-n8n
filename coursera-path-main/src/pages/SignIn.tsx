@@ -81,7 +81,7 @@ const SignIn = () => {
             </div>
           </div>
         </div>
-        <div className="text-white/60 text-sm">© 2025 SkillPath India. All rights reserved.</div>
+        <div className="text-white/60 text-sm">© 2025 CorpReady by corpready.in. All rights reserved.</div>
       </div>
 
       {/* Right Side - Form */}

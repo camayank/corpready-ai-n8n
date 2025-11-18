@@ -48,7 +48,7 @@ const SignUp = () => {
             <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
               <BookOpen className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold">SkillPath India</span>
+            <span className="text-2xl font-bold">CorpReady</span>
           </Link>
         </div>
         <div>
@@ -86,7 +86,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
-        <div className="text-white/60 text-sm">© 2025 SkillPath India. All rights reserved.</div>
+        <div className="text-white/60 text-sm">© 2025 CorpReady by corpready.in. All rights reserved.</div>
       </div>
 
       {/* Right Side - Form */}
