@@ -33,8 +33,11 @@ import Internships from "./pages/Internships";
 import Mentorship from "./pages/Mentorship";
 import Settings from "./pages/Settings";
 
-// Admin Pages
+// Layout Components
+import { UserLayout } from "./components/layout/UserLayout";
 import { AdminLayout } from "./components/admin/AdminLayout";
+
+// Admin Pages
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { UsersManagement } from "./pages/admin/UsersManagement";
 import { InternshipsManagement } from "./pages/admin/InternshipsManagement";
@@ -87,96 +90,21 @@ const App = () => (
                 <AuthGuard>
                   <EmailVerifiedGuard>
                     <OnboardingGuard>
-                      <Dashboard />
+                      <UserLayout />
                     </OnboardingGuard>
                   </EmailVerifiedGuard>
                 </AuthGuard>
               }
-            />
-            <Route
-              path="/app/curate"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <CourseCurate />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/course/:id"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <CoursePlayer />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/quiz/:id"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <QuizTaker />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/certificates"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <Certificates />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/internships"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <Internships />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/mentorship"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <Mentorship />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
-            <Route
-              path="/app/settings"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <Settings />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
-            />
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="curate" element={<CourseCurate />} />
+              <Route path="course/:id" element={<CoursePlayer />} />
+              <Route path="quiz/:id" element={<QuizTaker />} />
+              <Route path="certificates" element={<Certificates />} />
+              <Route path="internships" element={<Internships />} />
+              <Route path="mentorship" element={<Mentorship />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
 
             {/* Admin Routes (requires admin role) */}
             <Route
