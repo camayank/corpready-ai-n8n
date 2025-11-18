@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle } from "lucide-react";
+import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CourseCurate = () => {
@@ -22,31 +22,26 @@ const CourseCurate = () => {
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [curatedCourses, setCuratedCourses] = useState<any[]>([]);
+  const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant', content: string }>>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
 
   // Form state
   const [formData, setFormData] = useState({
-    classYear: "",
-    degree: "",
-    studyArea: "",
-    interests: [] as string[],
-    goals: "",
+    userType: "",
+    learningTopic: "",
+    reason: "",
     experienceLevel: "",
+    additionalContext: "",
   });
 
-  const studyAreas = [
-    "Computer Science",
-    "Information Technology",
-    "Electronics",
-    "Mechanical Engineering",
-    "Business Administration",
-    "Commerce",
-    "Marketing",
-    "Data Science",
-    "Design",
-    "Other",
+  const userTypeOptions = [
+    { value: "student", label: "Student" },
+    { value: "professional", label: "Professional" },
+    { value: "owner", label: "Business Owner" },
+    { value: "other", label: "Other" },
   ];
 
-  const interestOptions = [
+  const topicSuggestions = [
     "Web Development",
     "Mobile Development",
     "Data Analytics",
@@ -57,22 +52,18 @@ const CourseCurate = () => {
     "Business Strategy",
     "Finance",
     "Product Management",
+    "Python Programming",
+    "JavaScript",
+    "React",
+    "Node.js",
+    "Data Science",
   ];
 
-  const toggleInterest = (interest: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter((i) => i !== interest)
-        : [...prev.interests, interest],
-    }));
-  };
-
   const handleGenerate = async () => {
-    if (formData.interests.length === 0) {
+    if (!formData.userType || !formData.learningTopic || !formData.reason) {
       toast({
-        title: "Select at least one interest",
-        description: "Please choose topics you'd like to learn about",
+        title: "Please complete all required fields",
+        description: "User type, learning topic, and reason are required",
         variant: "destructive",
       });
       return;
@@ -80,162 +71,244 @@ const CourseCurate = () => {
 
     setIsGenerating(true);
 
-    // Simulate AI course curation
-    setTimeout(() => {
-      const mockCourses = [
-        {
-          id: 1,
-          title: `${formData.interests[0]} Fundamentals`,
-          description: `Master the basics of ${formData.interests[0]} with hands-on projects and real-world examples`,
-          videos: [
-            {
-              id: "dQw4w9WgXcQ",
-              title: "Introduction and Overview",
-              duration: "12:30",
-              order: 1,
-            },
-            {
-              id: "jNQXAC9IVRw",
-              title: "Core Concepts Explained",
-              duration: "18:45",
-              order: 2,
-            },
-            {
-              id: "9bZkp7q19f0",
-              title: "Practical Implementation",
-              duration: "22:15",
-              order: 3,
-            },
-            {
-              id: "kJQP7kiw5Fk",
-              title: "Advanced Techniques",
-              duration: "16:20",
-              order: 4,
-            },
-            {
-              id: "2Vv-BfVoq4g",
-              title: "Project Walkthrough Part 1",
-              duration: "20:10",
-              order: 5,
-            },
-            {
-              id: "8aGhZQkoFbQ",
-              title: "Project Walkthrough Part 2",
-              duration: "19:30",
-              order: 6,
-            },
-          ],
-          difficulty: formData.experienceLevel || "Beginner",
-          category: formData.interests[0],
-          totalDuration: "1h 49m",
-          aiReason: `Based on your background in ${formData.studyArea} and interest in ${formData.interests[0]}, this course provides a perfect foundation. The curriculum is tailored to ${formData.experienceLevel || "beginner"} level learners.`,
-        },
-        {
-          id: 2,
-          title: `Advanced ${formData.interests[1] || formData.interests[0]} Mastery`,
-          description: `Take your skills to the next level with advanced concepts and industry best practices`,
-          videos: [
-            {
-              id: "L_LUpnjgPso",
-              title: "Advanced Fundamentals",
-              duration: "15:40",
-              order: 1,
-            },
-            {
-              id: "YE7VzlLtp-4",
-              title: "Expert Strategies",
-              duration: "21:25",
-              order: 2,
-            },
-            {
-              id: "Mus_vwhTCq0",
-              title: "Industry Case Studies",
-              duration: "19:50",
-              order: 3,
-            },
-            {
-              id: "r7QXEJDJ-Ig",
-              title: "Optimization Techniques",
-              duration: "17:35",
-              order: 4,
-            },
-            {
-              id: "3JZ_D3ELwOQ",
-              title: "Real-World Applications",
-              duration: "23:15",
-              order: 5,
-            },
-            {
-              id: "hTWKbfoikeg",
-              title: "Final Project Guide",
-              duration: "25:20",
-              order: 6,
-            },
-          ],
-          difficulty: "Intermediate",
-          category: formData.interests[1] || formData.interests[0],
-          totalDuration: "2h 3m",
-          aiReason: `This advanced course aligns with your goals: "${formData.goals}". It bridges theory and practice, preparing you for real internship opportunities.`,
-        },
-      ];
+    try {
+      // Construct message for n8n workflow
+      const chatInput = `I am a ${formData.userType}. I want to learn about ${formData.learningTopic}. My reason for learning is: ${formData.reason}. ${formData.experienceLevel ? `My experience level is ${formData.experienceLevel}.` : ''} ${formData.additionalContext ? `Additional context: ${formData.additionalContext}` : ''}`;
 
+      // Call n8n webhook
+      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || 'http://localhost:5678/webhook/9291673e-e3f2-47ed-9113-f70dbb32fef4';
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chatInput: chatInput,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate curriculum');
+      }
+
+      const data = await response.json();
+
+      // Parse n8n response
+      // The workflow returns formatted learning pathway with topics and videos
+      const parsedCourses = parseN8NResponse(data);
+
+      setCuratedCourses(parsedCourses);
+      setIsGenerating(false);
+      setStep(3);
+
+      toast({
+        title: "Success!",
+        description: "Your personalized learning path has been generated",
+      });
+    } catch (error: any) {
+      console.error('N8N workflow error:', error);
+
+      // Fallback to mock data if n8n fails
+      toast({
+        title: "Using demo data",
+        description: "N8N workflow unavailable, showing example curriculum",
+        variant: "default",
+      });
+
+      const mockCourses = generateMockCourses();
       setCuratedCourses(mockCourses);
       setIsGenerating(false);
-      setStep(4);
-    }, 2000);
+      setStep(3);
+    }
+  };
+
+  const parseN8NResponse = (data: any) => {
+    // Parse the n8n workflow response
+    // Expected structure: topics with YouTube videos
+    try {
+      const courses = [];
+
+      if (data.output && Array.isArray(data.output)) {
+        data.output.forEach((topic: any, index: number) => {
+          if (topic.videos && Array.isArray(topic.videos)) {
+            courses.push({
+              id: index + 1,
+              title: topic.title || `${formData.learningTopic} - Module ${index + 1}`,
+              description: topic.description || `Learn ${topic.title} with curated video content`,
+              videos: topic.videos.map((video: any, vIndex: number) => ({
+                id: video.videoId || video.id,
+                title: video.title,
+                duration: video.duration || "N/A",
+                order: vIndex + 1,
+                thumbnail: video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`,
+              })),
+              difficulty: formData.experienceLevel || "Beginner",
+              category: formData.learningTopic,
+              totalDuration: calculateTotalDuration(topic.videos),
+              aiReason: topic.reason || `Curated based on your interest in ${formData.learningTopic} and your goal to ${formData.reason}`,
+            });
+          }
+        });
+      }
+
+      return courses.length > 0 ? courses : generateMockCourses();
+    } catch (error) {
+      console.error('Error parsing n8n response:', error);
+      return generateMockCourses();
+    }
+  };
+
+  const calculateTotalDuration = (videos: any[]) => {
+    // Calculate total duration from video array
+    let totalMinutes = 0;
+    videos.forEach(video => {
+      if (video.duration) {
+        const parts = video.duration.split(':');
+        if (parts.length === 2) {
+          totalMinutes += parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        } else if (parts.length === 3) {
+          totalMinutes += parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+        }
+      }
+    });
+
+    const hours = Math.floor(totalMinutes / 3600);
+    const minutes = Math.floor((totalMinutes % 3600) / 60);
+    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+  };
+
+  const generateMockCourses = () => {
+    return [
+      {
+        id: 1,
+        title: `${formData.learningTopic} Fundamentals`,
+        description: `Master the basics of ${formData.learningTopic} with hands-on projects and real-world examples`,
+        videos: [
+          {
+            id: "dQw4w9WgXcQ",
+            title: "Introduction and Overview",
+            duration: "12:30",
+            order: 1,
+          },
+          {
+            id: "jNQXAC9IVRw",
+            title: "Core Concepts Explained",
+            duration: "18:45",
+            order: 2,
+          },
+          {
+            id: "9bZkp7q19f0",
+            title: "Practical Implementation",
+            duration: "22:15",
+            order: 3,
+          },
+          {
+            id: "kJQP7kiw5Fk",
+            title: "Advanced Techniques",
+            duration: "16:20",
+            order: 4,
+          },
+        ],
+        difficulty: formData.experienceLevel || "Beginner",
+        category: formData.learningTopic,
+        totalDuration: "1h 10m",
+        aiReason: `Based on your profile as a ${formData.userType} interested in ${formData.learningTopic}, this course provides a perfect foundation. ${formData.reason}`,
+      },
+      {
+        id: 2,
+        title: `Advanced ${formData.learningTopic} Mastery`,
+        description: `Take your skills to the next level with advanced concepts and industry best practices`,
+        videos: [
+          {
+            id: "L_LUpnjgPso",
+            title: "Advanced Fundamentals",
+            duration: "15:40",
+            order: 1,
+          },
+          {
+            id: "YE7VzlLtp-4",
+            title: "Expert Strategies",
+            duration: "21:25",
+            order: 2,
+          },
+          {
+            id: "Mus_vwhTCq0",
+            title: "Industry Case Studies",
+            duration: "19:50",
+            order: 3,
+          },
+          {
+            id: "r7QXEJDJ-Ig",
+            title: "Optimization Techniques",
+            duration: "17:35",
+            order: 4,
+          },
+        ],
+        difficulty: "Intermediate",
+        category: formData.learningTopic,
+        totalDuration: "1h 14m",
+        aiReason: `This advanced course aligns with your goal to ${formData.reason}. It bridges theory and practice, preparing you for real-world opportunities.`,
+      },
+    ];
   };
 
   const renderStep1 = () => (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Tell us about yourself</h2>
-        <p className="text-muted-foreground">Help us understand your academic background</p>
+        <p className="text-muted-foreground">Help our AI understand your learning context</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="classYear">Current Class/Year</Label>
-          <Select value={formData.classYear} onValueChange={(value) => setFormData({ ...formData, classYear: value })}>
+          <Label htmlFor="userType">I am a... *</Label>
+          <Select value={formData.userType} onValueChange={(value) => setFormData({ ...formData, userType: value })}>
             <SelectTrigger className="mt-1.5">
-              <SelectValue placeholder="Select your class/year" />
+              <SelectValue placeholder="Select your role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="12th">12th Standard</SelectItem>
-              <SelectItem value="1st-year">1st Year (College)</SelectItem>
-              <SelectItem value="2nd-year">2nd Year (College)</SelectItem>
-              <SelectItem value="3rd-year">3rd Year (College)</SelectItem>
-              <SelectItem value="4th-year">4th Year (College)</SelectItem>
-              <SelectItem value="graduate">Recent Graduate</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="degree">Degree/Stream</Label>
-          <Input
-            id="degree"
-            placeholder="e.g., B.Tech, BBA, B.Com, B.Sc"
-            value={formData.degree}
-            onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
-            className="mt-1.5"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="studyArea">Current Study Area</Label>
-          <Select value={formData.studyArea} onValueChange={(value) => setFormData({ ...formData, studyArea: value })}>
-            <SelectTrigger className="mt-1.5">
-              <SelectValue placeholder="Select your field of study" />
-            </SelectTrigger>
-            <SelectContent>
-              {studyAreas.map((area) => (
-                <SelectItem key={area} value={area}>
-                  {area}
+              {userTypeOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="learningTopic">What do you want to learn? *</Label>
+          <Input
+            id="learningTopic"
+            placeholder="e.g., Web Development, Data Science, Digital Marketing"
+            value={formData.learningTopic}
+            onChange={(e) => setFormData({ ...formData, learningTopic: e.target.value })}
+            className="mt-1.5"
+          />
+          <div className="flex flex-wrap gap-2 mt-3">
+            {topicSuggestions.slice(0, 6).map((topic) => (
+              <Badge
+                key={topic}
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                onClick={() => setFormData({ ...formData, learningTopic: topic })}
+              >
+                {topic}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="reason">Why do you want to learn this? *</Label>
+          <Textarea
+            id="reason"
+            placeholder="E.g., To land an internship, build a portfolio project, start freelancing, switch careers..."
+            value={formData.reason}
+            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+            className="mt-1.5 min-h-[100px]"
+          />
         </div>
       </div>
     </div>
@@ -244,42 +317,8 @@ const CourseCurate = () => {
   const renderStep2 = () => (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">What do you want to learn?</h2>
-        <p className="text-muted-foreground">Select all topics that interest you</p>
-      </div>
-
-      <div className="flex flex-wrap gap-3">
-        {interestOptions.map((interest) => (
-          <Badge
-            key={interest}
-            onClick={() => toggleInterest(interest)}
-            className={`cursor-pointer px-4 py-2 text-sm transition-all ${
-              formData.interests.includes(interest)
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-muted text-foreground hover:bg-muted/80"
-            }`}
-          >
-            {formData.interests.includes(interest) && <CheckCircle className="w-4 h-4 mr-2" />}
-            {interest}
-          </Badge>
-        ))}
-      </div>
-
-      {formData.interests.length > 0 && (
-        <Card className="p-4 bg-primary/5 border-primary/20">
-          <div className="text-sm">
-            <span className="font-semibold">Selected:</span> {formData.interests.join(", ")}
-          </div>
-        </Card>
-      )}
-    </div>
-  );
-
-  const renderStep3 = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Final details</h2>
-        <p className="text-muted-foreground">Help AI personalize your learning path</p>
+        <h2 className="text-2xl font-bold mb-2">Customize your learning path</h2>
+        <p className="text-muted-foreground">Optional details to personalize your curriculum</p>
       </div>
 
       <div className="space-y-4">
@@ -301,15 +340,28 @@ const CourseCurate = () => {
         </div>
 
         <div>
-          <Label htmlFor="goals">What are your learning goals?</Label>
+          <Label htmlFor="additionalContext">Additional Context (Optional)</Label>
           <Textarea
-            id="goals"
-            placeholder="E.g., I want to land an internship in data analytics, build a portfolio website, learn digital marketing for my startup..."
-            value={formData.goals}
-            onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
+            id="additionalContext"
+            placeholder="Any specific requirements, time constraints, or preferences? E.g., I prefer project-based learning, I have 2 hours daily..."
+            value={formData.additionalContext}
+            onChange={(e) => setFormData({ ...formData, additionalContext: e.target.value })}
             className="mt-1.5 min-h-[120px]"
           />
         </div>
+
+        <Card className="p-4 bg-primary/5 border-primary/20">
+          <div className="flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="text-sm">
+              <p className="font-semibold mb-1">AI-Powered Curation</p>
+              <p className="text-muted-foreground">
+                Our AI will analyze your profile and generate a personalized learning path with curated YouTube videos,
+                optimized for your goals and experience level.
+              </p>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
@@ -408,18 +460,18 @@ const CourseCurate = () => {
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
           {/* Progress Indicator */}
-          {step < 4 && (
+          {step < 3 && (
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">
-                  Step {step} of 3
+                  Step {step} of 2
                 </span>
-                <span className="text-sm text-muted-foreground">{Math.round((step / 3) * 100)}% complete</span>
+                <span className="text-sm text-muted-foreground">{Math.round((step / 2) * 100)}% complete</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
                 <div
                   className="bg-gradient-hero h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(step / 3) * 100}%` }}
+                  style={{ width: `${(step / 2) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -429,11 +481,10 @@ const CourseCurate = () => {
           <Card className="p-8 shadow-large">
             {step === 1 && renderStep1()}
             {step === 2 && renderStep2()}
-            {step === 3 && renderStep3()}
-            {step === 4 && renderCuratedResults()}
+            {step === 3 && renderCuratedResults()}
 
             {/* Navigation Buttons */}
-            {step < 4 && (
+            {step < 3 && (
               <div className="flex justify-between mt-8 pt-6 border-t">
                 {step > 1 ? (
                   <Button variant="ghost" onClick={() => setStep(step - 1)}>
@@ -444,14 +495,11 @@ const CourseCurate = () => {
                   <div></div>
                 )}
 
-                {step < 3 ? (
+                {step < 2 ? (
                   <Button
                     variant="hero"
                     onClick={() => setStep(step + 1)}
-                    disabled={
-                      (step === 1 && (!formData.classYear || !formData.studyArea)) ||
-                      (step === 2 && formData.interests.length === 0)
-                    }
+                    disabled={!formData.userType || !formData.learningTopic || !formData.reason}
                   >
                     Continue
                     <ArrowRight className="ml-2 w-4 h-4" />
@@ -465,7 +513,7 @@ const CourseCurate = () => {
                       </>
                     ) : (
                       <>
-                        Generate Courses
+                        Generate My Learning Path
                         <Sparkles className="ml-2 w-4 h-4" />
                       </>
                     )}
