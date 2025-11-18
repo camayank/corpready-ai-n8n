@@ -28,6 +28,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy for Replit environment
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors({
