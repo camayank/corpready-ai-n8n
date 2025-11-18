@@ -1,12 +1,16 @@
-# SkillPath India - Educational Platform
+# CorpReady - Corporate Training Platform
 
 ## Overview
-SkillPath India is a full-stack AI-powered learning platform that provides personalized micro-courses curated from YouTube videos, quizzes, certificates, and verified internship opportunities for students in India.
+CorpReady (corpready.in) is a full-stack AI-powered corporate training platform that provides personalized learning paths, industry certifications, skill assessments, and verified career opportunities for professionals and enterprises.
 
-**Current State:** Successfully migrated from Vercel to Replit and running smoothly.
+**Current State:** Successfully migrated from Vercel to Replit, rebranded from SkillPath to CorpReady with modern UI/UX.
 
 ## Recent Changes (November 18, 2025)
-- Migrated from Vercel to Replit environment
+- **Complete Rebrand:** Transformed from SkillPath India to CorpReady corporate training platform
+- **Modern UI/UX:** Updated design system with new corporate color palette (Indigo, Teal, Coral)
+- **Glassmorphism Effects:** Added modern glass morphism patterns and gradient animations
+- **Content Updates:** Repositioned platform for enterprise/corporate training market
+- **Migrated from Vercel to Replit** environment
 - Configured Vite frontend to run on port 5000 with host 0.0.0.0
 - Configured Express backend to bind to 0.0.0.0 for Replit compatibility
 - Fixed Prisma import paths (changed from `../../lib/prisma` to correct path `../../utils/db`)
@@ -67,12 +71,14 @@ The following environment variables are configured in Replit Secrets:
 - `GROQ_API_KEY` - GROQ AI API key
 
 ## Key Features
-1. **AI-Curated Learning Paths:** Personalized micro-courses from YouTube
-2. **Interactive Quizzes:** Test knowledge with automatically generated quizzes
-3. **Digital Certificates:** Earn certificates upon course completion
-4. **Internship Marketplace:** Connect with verified internship opportunities
-5. **Mentorship Program:** Get guidance from industry professionals
-6. **Admin Dashboard:** Comprehensive content and user management
+1. **AI-Powered Skill Assessment:** Intelligent skill gap analysis and personalized roadmaps
+2. **Corporate Training Programs:** Enterprise-grade learning paths and certifications
+3. **Interactive Assessments:** AI-generated quizzes and skill validation
+4. **Industry Certifications:** Recognized credentials for career advancement
+5. **Talent Marketplace:** Connect skilled professionals with opportunities
+6. **Mentorship Program:** Access to industry experts and coaches
+7. **Admin Dashboard:** Comprehensive L&D and user management tools
+8. **Analytics Dashboard:** Track ROI and skill development metrics
 
 ## User Preferences
 - Using npm as the package manager for both frontend and backend
@@ -95,7 +101,7 @@ The application auto-starts via the "SkillPath India" workflow which runs `bash 
 
 ## Test Credentials
 The database has been seeded with test users for all roles:
-- **Admin:** admin@skillpath.com / Admin@123456
+- **Admin:** admin@skillpath.com / Admin@123456 (Note: Will be updated to corpready.in in next backend seed update)
 - **Student:** student@skillpath.com / Student@123456
 - **Curator:** curator@skillpath.com / Curator@123456
 - **Operations:** ops@skillpath.com / Ops@123456

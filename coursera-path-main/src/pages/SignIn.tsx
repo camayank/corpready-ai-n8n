@@ -39,49 +39,53 @@ const SignIn = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero p-12 flex-col justify-between text-white">
-        <div>
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero p-12 flex-col justify-between text-white animate-gradient relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+        <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl glass-dark flex items-center justify-center">
               <BookOpen className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold">SkillPath India</span>
+            <span className="text-2xl font-bold">CorpReady</span>
           </Link>
         </div>
-        <div>
-          <h1 className="text-4xl font-bold mb-4">Welcome back!</h1>
-          <p className="text-white/90 text-lg mb-8">Continue your learning journey and achieve your goals.</p>
+        <div className="relative z-10">
+          <h1 className="text-4xl font-bold mb-4">Welcome back to CorpReady!</h1>
+          <p className="text-white/90 text-lg mb-8">Access your corporate training dashboard and continue building your skills.</p>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Personalized Learning</div>
-                <div className="text-white/80 text-sm">AI-curated courses tailored to your goals</div>
+                <div className="font-semibold mb-1">AI-Powered Assessments</div>
+                <div className="text-white/80 text-sm">Track skill development with intelligent insights</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Verified Certificates</div>
-                <div className="text-white/80 text-sm">Showcase your skills to employers</div>
+                <div className="font-semibold mb-1">Industry Certifications</div>
+                <div className="text-white/80 text-sm">Earn recognized credentials for career growth</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Career Opportunities</div>
-                <div className="text-white/80 text-sm">Connect with verified internships</div>
+                <div className="font-semibold mb-1">Career Advancement</div>
+                <div className="text-white/80 text-sm">Access exclusive opportunities and placements</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="text-white/60 text-sm">© 2025 SkillPath India. All rights reserved.</div>
+        <div className="text-white/60 text-sm relative z-10">© 2025 CorpReady by corpready.in. All rights reserved.</div>
       </div>
 
       {/* Right Side - Form */}
@@ -93,7 +97,7 @@ const SignIn = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold">SkillPath India</span>
+                <span className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady</span>
               </Link>
             </div>
             <h2 className="text-2xl font-bold mb-2">Sign in to your account</h2>
