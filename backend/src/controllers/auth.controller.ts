@@ -316,3 +316,85 @@ export const getMe = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch user' });
   }
 };
+
+/**
+ * Development-only login endpoint
+ * Allows instant login without credentials for testing
+ * ONLY WORKS IN DEVELOPMENT MODE
+ */
+export const devLogin = async (req: AuthRequest, res: Response) => {
+  // Security check: Only allow in development
+  if (process.env.NODE_ENV !== 'development') {
+    return res.status(403).json({
+      error: 'Development login is only available in development mode'
+    });
+  }
+
+  try {
+    const { email, role } = req.body;
+
+    // Default test user emails based on role
+    const defaultEmails: Record<string, string> = {
+      USER: 'student@corpready.in',
+      ADMIN: 'admin@corpready.in',
+      CURATOR: 'curator@corpready.in',
+      OPS: 'ops@corpready.in',
+      PARTNER: 'partner@corpready.in',
+    };
+
+    const targetEmail = email || defaultEmails[role || 'USER'] || defaultEmails.USER;
+
+    // Find or create test user
+    let user = await prisma.user.findUnique({ where: { email: targetEmail } });
+
+    if (!user) {
+      // Create test user if doesn't exist
+      const hashedPassword = await bcrypt.hash('Test@123456', 10);
+
+      const roleValue = role || 'USER';
+      const roleName = roleValue.charAt(0).toUpperCase() + roleValue.slice(1).toLowerCase();
+
+      user = await prisma.user.create({
+        data: {
+          email: targetEmail,
+          password: hashedPassword,
+          name: `Test ${roleName}`,
+          role: roleValue as any,
+          isEmailVerified: true,
+          isOnboardingComplete: true,
+          isActive: true,
+          consentGiven: true,
+          areaOfStudy: 'Computer Science',
+          graduationYear: 2024,
+        },
+      });
+
+      console.log(`✅ Created test user: ${user.email} (${user.role})`);
+    }
+
+    // Generate tokens
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    // Update refresh token
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken,
+        lastLoginAt: new Date(),
+      },
+    });
+
+    const { password: _, refreshToken: __, ...userWithoutSensitive } = user;
+
+    res.json({
+      user: userWithoutSensitive,
+      accessToken,
+      refreshToken,
+      message: `🚀 Logged in as ${user.email} (${user.role}) - Development Mode`,
+    });
+  } catch (error) {
+    console.error('Dev login error:', error);
+    res.status(500).json({ error: 'Development login failed' });
+  }
+};
