@@ -328,10 +328,10 @@ const Landing = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold">SkillPath India</span>
+                <span className="text-lg font-bold">CorpReady</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                AI-powered learning platform connecting Indian students to skills and opportunities.
+                AI-powered corporate training platform transforming workforce development.
               </p>
             </div>
             <div>
@@ -406,7 +406,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2025 SkillPath India. All rights reserved. Made with ❤️ for Indian students.</p>
+            <p>© 2025 CorpReady by corpready.in. All rights reserved.</p>
           </div>
         </div>
       </footer>
