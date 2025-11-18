@@ -20,6 +20,7 @@ import {
   Trophy,
   ListChecks,
   Video,
+  TrendingUp,
 } from "lucide-react";
 
 const Landing = () => {
