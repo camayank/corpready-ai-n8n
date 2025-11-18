@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const recommendedCourses = [
     {
       id: 1,
@@ -138,7 +140,7 @@ const Dashboard = () => {
                 <div className="text-xs text-muted-foreground">37% complete</div>
               </div>
               <div className="flex items-center">
-                <Button variant="hero">Continue</Button>
+                <Button variant="hero" onClick={() => navigate('/app/course/1')}>Continue</Button>
               </div>
             </div>
           </Card>
@@ -148,7 +150,7 @@ const Dashboard = () => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Recommended for You</h2>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/app/curate')}>
               View All
             </Button>
           </div>
@@ -185,7 +187,12 @@ const Dashboard = () => {
                         {course.duration}
                       </span>
                     </div>
-                    <Button variant="outline" className="w-full" size="sm">
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      size="sm"
+                      onClick={() => navigate(`/app/course/${course.id}`)}
+                    >
                       Start Learning
                     </Button>
                   </div>

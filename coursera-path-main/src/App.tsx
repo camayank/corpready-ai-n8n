@@ -41,6 +41,7 @@ import { ErrorBoundary } from "./components/error-boundary/ErrorBoundary";
 // Admin Pages
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { UsersManagement } from "./pages/admin/UsersManagement";
+import { UserDetail } from "./pages/admin/UserDetail";
 import { InternshipsManagement } from "./pages/admin/InternshipsManagement";
 import { DomainsManagement } from "./pages/admin/DomainsManagement";
 import { CoursesManagement } from "./pages/admin/CoursesManagement";
@@ -117,6 +118,7 @@ const App = () => (
             >
               <Route index element={<AdminDashboard />} />
               <Route path="users" element={<UsersManagement />} />
+              <Route path="users/:id" element={<UserDetail />} />
               <Route path="internships" element={<InternshipsManagement />} />
               <Route path="domains" element={<DomainsManagement />} />
               <Route path="courses" element={<CoursesManagement />} />

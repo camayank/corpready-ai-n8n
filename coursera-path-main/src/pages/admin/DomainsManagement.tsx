@@ -11,6 +11,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 export const DomainsManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', description: '', icon: '' });
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -26,6 +27,19 @@ export const DomainsManagement = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-domains'] });
       toast({ title: 'Domain created successfully' });
       setIsOpen(false);
+      setEditingId(null);
+      setFormData({ name: '', description: '', icon: '' });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      apiClient.patch(`/admin/domains/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-domains'] });
+      toast({ title: 'Domain updated successfully' });
+      setIsOpen(false);
+      setEditingId(null);
       setFormData({ name: '', description: '', icon: '' });
     },
   });
@@ -37,6 +51,24 @@ export const DomainsManagement = () => {
       toast({ title: 'Domain deleted' });
     },
   });
+
+  const handleEdit = (domain: any) => {
+    setEditingId(domain.id);
+    setFormData({
+      name: domain.name,
+      description: domain.description,
+      icon: domain.icon || '',
+    });
+    setIsOpen(true);
+  };
+
+  const handleSubmit = () => {
+    if (editingId) {
+      updateMutation.mutate({ id: editingId, data: formData });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -50,7 +82,9 @@ export const DomainsManagement = () => {
             <Button><Plus className="h-4 w-4 mr-2" /> Add Domain</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>Create Domain</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>{editingId ? 'Edit Domain' : 'Create Domain'}</DialogTitle>
+            </DialogHeader>
             <div className="space-y-4">
               <div>
                 <Label>Name</Label>
@@ -64,7 +98,9 @@ export const DomainsManagement = () => {
                 <Label>Icon (emoji)</Label>
                 <Input value={formData.icon} onChange={(e) => setFormData({ ...formData, icon: e.target.value })} />
               </div>
-              <Button className="w-full" onClick={() => createMutation.mutate(formData)}>Create Domain</Button>
+              <Button className="w-full" onClick={handleSubmit}>
+                {editingId ? 'Update Domain' : 'Create Domain'}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -77,7 +113,9 @@ export const DomainsManagement = () => {
               <div className="flex items-start justify-between mb-4">
                 <div className="text-4xl">{domain.icon || '📚'}</div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="ghost"><Pencil className="h-4 w-4" /></Button>
+                  <Button size="sm" variant="ghost" onClick={() => handleEdit(domain)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
                   <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(domain.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
