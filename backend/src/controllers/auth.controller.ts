@@ -16,14 +16,14 @@ export const signup = async (req: AuthRequest, res: Response) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const emailVerificationToken = uuidv4();
 
+    // Auto-verify email on signup (email verification disabled)
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
-        emailVerificationToken,
+        isEmailVerified: true, // Auto-verified - no email verification needed
       },
       select: {
         id: true,
@@ -42,12 +42,8 @@ export const signup = async (req: AuthRequest, res: Response) => {
       data: { refreshToken },
     });
 
-    // Send verification email
-    try {
-      await sendVerificationEmail(email, emailVerificationToken);
-    } catch (emailError) {
-      console.error('Failed to send verification email:', emailError);
-    }
+    // Email verification disabled - no need to send verification email
+    // Users can access the platform immediately after signup
 
     res.status(201).json({
       user,
