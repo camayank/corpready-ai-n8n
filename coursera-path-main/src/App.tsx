@@ -63,40 +63,22 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Email Verification (requires auth) */}
+            {/* Email Verification (DEMO MODE: guard temporarily disabled) */}
             <Route
               path="/verify-email"
-              element={
-                <AuthGuard>
-                  <VerifyEmail />
-                </AuthGuard>
-              }
+              element={<VerifyEmail />}
             />
 
-            {/* Onboarding (requires auth + email verified) */}
+            {/* Onboarding (DEMO MODE: guard temporarily disabled) */}
             <Route
               path="/onboarding"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <Onboarding />
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
+              element={<Onboarding />}
             />
 
-            {/* Protected App Routes (requires auth + email verified + onboarding complete) */}
+            {/* Protected App Routes (DEMO MODE: guards temporarily disabled) */}
             <Route
               path="/app"
-              element={
-                <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <UserLayout />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
-                </AuthGuard>
-              }
+              element={<UserLayout />}
             >
               <Route index element={<Dashboard />} />
               <Route path="curate" element={<CourseCurate />} />
@@ -108,16 +90,10 @@ const App = () => (
               <Route path="settings" element={<Settings />} />
             </Route>
 
-            {/* Admin Routes (requires admin role) */}
+            {/* Admin Routes (DEMO MODE: guards temporarily disabled) */}
             <Route
               path="/admin"
-              element={
-                <AuthGuard>
-                  <AdminGuard>
-                    <AdminLayout />
-                  </AdminGuard>
-                </AuthGuard>
-              }
+              element={<AdminLayout />}
             >
               <Route index element={<AdminDashboard />} />
               <Route path="users" element={<UsersManagement />} />
