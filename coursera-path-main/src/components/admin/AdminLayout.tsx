@@ -19,6 +19,7 @@ import {
   LogOut,
   Menu,
   X,
+  Shield,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -48,39 +49,41 @@ export const AdminLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <aside
         className={cn(
-          'bg-white border-r border-gray-200 flex flex-col transition-all duration-300',
+          'bg-sidebar border-r flex flex-col transition-all duration-300',
           isSidebarOpen ? 'w-64' : 'w-0 overflow-hidden'
         )}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-800">SkillPath Admin</h1>
+        <div className="p-4 border-b">
+          <Link to="/admin" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-lg font-bold">SkillPath Admin</span>
+          </Link>
         </div>
 
         {/* Navigation */}
-        <ScrollArea className="flex-1 px-3 py-4">
-          <nav className="space-y-1">
+        <ScrollArea className="flex-1">
+          <nav className="p-4 space-y-1">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
 
               return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span>{item.label}</span>
+                <Link key={item.path} to={item.path}>
+                  <Button
+                    variant={isActive ? 'secondary' : 'ghost'}
+                    className="w-full justify-start"
+                    size="sm"
+                  >
+                    <Icon className="mr-2 w-4 h-4" />
+                    {item.label}
+                  </Button>
                 </Link>
               );
             })}
@@ -88,24 +91,32 @@ export const AdminLayout = () => {
         </ScrollArea>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center gap-3 mb-3">
-            <Avatar className="h-9 w-9">
-              <AvatarFallback>{user?.name?.charAt(0) || 'A'}</AvatarFallback>
+        <div className="p-4 border-t space-y-1">
+          <div className="flex items-center gap-3 px-3 py-2 mb-2">
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                {user?.name?.charAt(0) || 'A'}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.role}</p>
+              <p className="text-sm font-medium truncate">{user?.name}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.role}</p>
             </div>
           </div>
+          <Link to="/app">
+            <Button variant="ghost" className="w-full justify-start" size="sm">
+              <LogOut className="mr-2 w-4 h-4" />
+              Back to App
+            </Button>
+          </Link>
           <Button
-            variant="outline"
+            variant="ghost"
+            className="w-full justify-start"
             size="sm"
-            className="w-full"
             onClick={handleLogout}
           >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
+            <LogOut className="mr-2 w-4 h-4" />
+            Sign Out
           </Button>
         </div>
       </aside>
@@ -113,40 +124,46 @@ export const AdminLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              {isSidebarOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                {navigationItems.find((item) => item.path === location.pathname)?.label || 'Admin'}
-              </h2>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="text-xs">
-              {process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'DEVELOPMENT'}
-            </Badge>
-            <Link to="/app">
-              <Button variant="outline" size="sm">
-                Back to App
+        <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+          <div className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="rounded-full"
+              >
+                {isSidebarOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </Button>
-            </Link>
+              <div>
+                <h2 className="text-lg font-semibold">
+                  {navigationItems.find((item) => item.path === location.pathname)?.label || 'Admin'}
+                </h2>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="outline"
+                className={cn(
+                  'text-xs',
+                  process.env.NODE_ENV === 'production'
+                    ? 'bg-red-50 text-red-700 border-red-200'
+                    : 'bg-blue-50 text-blue-700 border-blue-200'
+                )}
+              >
+                {process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'DEVELOPMENT'}
+              </Badge>
+            </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-6 bg-background">
           <Outlet />
         </main>
       </div>
