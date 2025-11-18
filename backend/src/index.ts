@@ -22,6 +22,7 @@ import dashboardRoutes from './routes/dashboard.routes';
 import premiumRoutes from './routes/premium.routes';
 import noteRoutes from './routes/note.routes';
 import adminRoutes from './routes/admin';
+import youtubeRoutes from './routes/youtube.routes';
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/premium', premiumRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/youtube', youtubeRoutes);
 
 // Admin Routes
 app.use('/api/admin', adminRoutes);
