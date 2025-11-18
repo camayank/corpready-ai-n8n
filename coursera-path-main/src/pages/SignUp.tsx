@@ -1,20 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { signup, isAuthenticated } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    navigate('/app', { replace: true });
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication
-    console.log("Sign up:", { name, email, password });
+
+    if (password.length < 8) {
+      return; // Validation message already shown in UI
+    }
+
+    setIsLoading(true);
+    try {
+      await signup({ name, email, password });
+      // Navigate to email verification page
+      navigate('/verify-email');
+    } catch (error) {
+      // Error is handled in auth context with toast
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -133,8 +155,8 @@ const SignUp = () => {
               <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
             </div>
 
-            <Button type="submit" variant="hero" className="w-full" size="lg">
-              Create Account
+            <Button type="submit" variant="hero" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? "Creating account..." : "Create Account"}
             </Button>
 
             <div className="relative">
