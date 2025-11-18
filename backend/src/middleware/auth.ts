@@ -28,6 +28,8 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         gender: true,
         areaOfStudy: true,
         graduationYear: true,
+        role: true,
+        isActive: true,
         isEmailVerified: true,
         isOnboardingComplete: true,
       },

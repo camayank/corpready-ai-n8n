@@ -11,6 +11,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import { EmailVerifiedGuard } from "@/components/guards/EmailVerifiedGuard";
 import { OnboardingGuard } from "@/components/guards/OnboardingGuard";
+import { AdminGuard } from "@/components/guards/AdminGuard";
 
 // Public Pages
 import Landing from "./pages/Landing";
@@ -31,6 +32,11 @@ import Certificates from "./pages/Certificates";
 import Internships from "./pages/Internships";
 import Mentorship from "./pages/Mentorship";
 import Settings from "./pages/Settings";
+
+// Admin Pages
+import { AdminLayout } from "./components/admin/AdminLayout";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { UsersManagement } from "./pages/admin/UsersManagement";
 
 const queryClient = new QueryClient();
 
@@ -168,6 +174,21 @@ const App = () => (
                 </AuthGuard>
               }
             />
+
+            {/* Admin Routes (requires admin role) */}
+            <Route
+              path="/admin"
+              element={
+                <AuthGuard>
+                  <AdminGuard>
+                    <AdminLayout />
+                  </AdminGuard>
+                </AuthGuard>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<UsersManagement />} />
+            </Route>
 
             {/* Catch-all 404 route */}
             <Route path="*" element={<NotFound />} />
