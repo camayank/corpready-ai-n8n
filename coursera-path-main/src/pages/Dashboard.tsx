@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   BookOpen,
-  Search,
   Flame,
   Trophy,
   Star,
@@ -12,6 +11,7 @@ import {
   Clock,
   TrendingUp,
   Target,
+  Briefcase,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -57,13 +57,13 @@ const Dashboard = () => {
         <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, Student! 👋</h1>
-              <p className="text-muted-foreground">Continue your learning journey and achieve your goals</p>
+              <h1 className="text-3xl font-bold mb-2">Welcome to CorpReady! 🚀</h1>
+              <p className="text-muted-foreground">Master skills, build your career, and land your dream opportunities</p>
             </div>
             <Link to="/app/curate">
-              <Button variant="hero" size="lg">
-                <Search className="mr-2 w-5 h-5" />
-                Curate New Course
+              <Button variant="hero" size="lg" className="shadow-medium hover:shadow-large transition-shadow">
+                <Target className="mr-2 w-5 h-5" />
+                Start Learning Path
               </Button>
             </Link>
           </div>
@@ -71,7 +71,7 @@ const Dashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6">
-          <Card className="p-6 shadow-soft">
+          <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
                 <Flame className="w-6 h-6 text-accent" />
@@ -83,26 +83,26 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="p-6 shadow-soft">
+          <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
                 <Trophy className="w-6 h-6 text-secondary" />
               </div>
               <div>
                 <div className="text-2xl font-bold">850</div>
-                <div className="text-sm text-muted-foreground">Total XP</div>
+                <div className="text-sm text-muted-foreground">Career Points</div>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 shadow-soft">
+          <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <Star className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <div className="text-2xl font-bold">5</div>
-                <div className="text-sm text-muted-foreground">Badges Earned</div>
+                <div className="text-sm text-muted-foreground">Skills Mastered</div>
               </div>
             </div>
           </Card>
@@ -197,45 +197,45 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div>
-          <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
+          <h2 className="text-2xl font-bold mb-4">Fast Track Your Career</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Link to="/app/curate">
-              <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow cursor-pointer group">
+              <Card className="p-6 shadow-soft hover:shadow-medium transition-all cursor-pointer group hover:-translate-y-1">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Search className="w-6 h-6 text-primary" />
+                    <Target className="w-6 h-6 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold">Curate Course</h3>
-                    <p className="text-sm text-muted-foreground">Create personalized learning path</p>
+                    <h3 className="font-bold">Build Skills</h3>
+                    <p className="text-sm text-muted-foreground">AI-powered learning paths</p>
                   </div>
                 </div>
               </Card>
             </Link>
 
             <Link to="/app/certificates">
-              <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow cursor-pointer group">
+              <Card className="p-6 shadow-soft hover:shadow-medium transition-all cursor-pointer group hover:-translate-y-1">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
                     <Trophy className="w-6 h-6 text-secondary" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold">My Certificates</h3>
-                    <p className="text-sm text-muted-foreground">View earned achievements</p>
+                    <h3 className="font-bold">Showcase Skills</h3>
+                    <p className="text-sm text-muted-foreground">Earn verified certificates</p>
                   </div>
                 </div>
               </Card>
             </Link>
 
             <Link to="/app/internships">
-              <Card className="p-6 shadow-soft hover:shadow-medium transition-shadow cursor-pointer group">
+              <Card className="p-6 shadow-soft hover:shadow-medium transition-all cursor-pointer group hover:-translate-y-1">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                    <Target className="w-6 h-6 text-accent" />
+                    <Briefcase className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold">Find Internships</h3>
-                    <p className="text-sm text-muted-foreground">Explore opportunities</p>
+                    <h3 className="font-bold">Land Opportunities</h3>
+                    <p className="text-sm text-muted-foreground">Find your dream role</p>
                   </div>
                 </div>
               </Card>
