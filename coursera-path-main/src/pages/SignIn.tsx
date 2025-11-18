@@ -1,19 +1,39 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Mail, Lock } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    const from = (location.state as any)?.from?.pathname || '/app';
+    navigate(from, { replace: true });
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication
-    console.log("Sign in:", { email, password });
+    setIsLoading(true);
+    try {
+      await login({ email, password });
+      // Navigation will be handled by auth context after successful login
+      const from = (location.state as any)?.from?.pathname || '/app';
+      navigate(from, { replace: true });
+    } catch (error) {
+      // Error is handled in auth context with toast
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -100,7 +120,7 @@ const SignIn = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link to="#" className="text-sm text-primary hover:underline">
+                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -118,8 +138,8 @@ const SignIn = () => {
               </div>
             </div>
 
-            <Button type="submit" variant="hero" className="w-full" size="lg">
-              Sign In
+            <Button type="submit" variant="hero" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Sign In"}
             </Button>
 
             <div className="relative">
