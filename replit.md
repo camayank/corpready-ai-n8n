@@ -1,13 +1,20 @@
-# SkillPath India - Project Overview
+# CorpReady Learning Pathways - Project Overview
 
 ## Overview
 
-SkillPath India is a comprehensive Learning Management System (LMS) and Career Platform designed for Indian students. The platform enables AI-powered course curation from YouTube videos, certificate generation, internship matching, and mentorship booking. It features a robust multi-role system with separate user and admin interfaces.
+CorpReady Learning Pathways is a focused content curation platform that provides AI-powered learning pathway generation from YouTube videos. The platform enables personalized course curation, progress tracking, certificate generation, and career opportunities through an intuitive interface.
 
-**Core Purpose:** Connect students with personalized learning paths, verified internships, and career mentorship through an integrated platform that combines content curation, assessment, and professional opportunities.
+**Core Purpose:** Provide personalized, AI-curated learning pathways from YouTube's best content, organized into structured modules tailored to individual learning goals.
 
 **Platform Type:** Full-stack web application with React frontend and Node.js backend  
 **Scale:** 21 functional pages, 80+ features, 60+ API endpoints, 5 user roles
+
+**Recent Updates (Nov 2025):**
+- Migrated and rebranded from Vercel to Replit as "CorpReady"
+- Redesigned landing page to focus on content curation features (not general corporate homepage)
+- Configured Vite proxy for seamless frontend-backend communication
+- Fixed authentication flow with proper NODE_ENV configuration
+- Improved error handling for N8N AI integration and YouTube API services
 
 ## User Preferences
 
