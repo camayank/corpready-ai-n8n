@@ -37,6 +37,9 @@ import Settings from "./pages/Settings";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { UsersManagement } from "./pages/admin/UsersManagement";
+import { InternshipsManagement } from "./pages/admin/InternshipsManagement";
+import { DomainsManagement } from "./pages/admin/DomainsManagement";
+import { CoursesManagement } from "./pages/admin/CoursesManagement";
 
 const queryClient = new QueryClient();
 
@@ -188,6 +191,9 @@ const App = () => (
             >
               <Route index element={<AdminDashboard />} />
               <Route path="users" element={<UsersManagement />} />
+              <Route path="internships" element={<InternshipsManagement />} />
+              <Route path="domains" element={<DomainsManagement />} />
+              <Route path="courses" element={<CoursesManagement />} />
             </Route>
 
             {/* Catch-all 404 route */}
