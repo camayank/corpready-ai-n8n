@@ -73,10 +73,10 @@ const Landing = () => {
   const testimonials = [
     {
       name: "Priya Sharma",
-      role: "Computer Science Student",
-      college: "Delhi University",
+      role: "L&D Manager",
+      college: "TechCorp Solutions",
       quote:
-        "SkillPath helped me land my first internship in just 3 weeks! The AI-curated courses were exactly what I needed.",
+        "CorpReady transformed our workforce development. Our team's productivity increased by 40% in just 3 months!",
       rating: 5,
     },
     {
@@ -113,7 +113,7 @@ const Landing = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold">SkillPath India</span>
+            <span className="text-xl font-bold">CorpReady</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
@@ -150,7 +150,7 @@ const Landing = () => {
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-6 bg-accent/10 text-accent border-accent/20">
-              🚀 AI-Powered Learning Platform for India
+              🚀 AI-Powered Corporate Training Platform
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               Learn Fast. Prove Skills.

@@ -98,7 +98,7 @@ const SignUp = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold">SkillPath India</span>
+                <span className="text-xl font-bold">CorpReady</span>
               </Link>
             </div>
             <h2 className="text-2xl font-bold mb-2">Create your account</h2>
