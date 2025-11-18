@@ -31,6 +31,66 @@ async function main() {
     role: admin.role,
   });
 
+  // Create test users for all roles
+  const testUsers = [
+    {
+      email: 'student@skillpath.com',
+      password: 'Student@123',
+      name: 'Test Student',
+      role: UserRole.USER,
+      isEmailVerified: true,
+      isOnboardingComplete: true,
+      isActive: true,
+      consentGiven: true,
+      areaOfStudy: 'Computer Science',
+      graduationYear: 2024,
+    },
+    {
+      email: 'curator@skillpath.com',
+      password: 'Curator@123',
+      name: 'Content Curator',
+      role: UserRole.CURATOR,
+      isEmailVerified: true,
+      isOnboardingComplete: true,
+      isActive: true,
+      consentGiven: true,
+    },
+    {
+      email: 'ops@skillpath.com',
+      password: 'Ops@123456',
+      name: 'Operations Manager',
+      role: UserRole.OPS,
+      isEmailVerified: true,
+      isOnboardingComplete: true,
+      isActive: true,
+      consentGiven: true,
+    },
+    {
+      email: 'partner@skillpath.com',
+      password: 'Partner@123',
+      name: 'Partner Organization',
+      role: UserRole.PARTNER,
+      isEmailVerified: true,
+      isOnboardingComplete: true,
+      isActive: true,
+      consentGiven: true,
+    },
+  ];
+
+  for (const userData of testUsers) {
+    const hashedUserPassword = await bcrypt.hash(userData.password, 10);
+    await prisma.user.upsert({
+      where: { email: userData.email },
+      update: {},
+      create: {
+        ...userData,
+        password: hashedUserPassword,
+      },
+    });
+  }
+
+  console.log('✅ Test users created for all roles');
+
   // Create sample domains
   const domains = [
     {
@@ -102,10 +162,23 @@ async function main() {
   }
 
   console.log('🌱 Seed completed successfully!');
-  console.log('\n📝 Admin Credentials:');
+  console.log('\n📝 Test Credentials for All Roles:');
+  console.log('\n👨‍💼 ADMIN (Full System Access):');
   console.log(`   Email: ${adminEmail}`);
   console.log(`   Password: ${adminPassword}`);
-  console.log('\n⚠️  IMPORTANT: Change the admin password after first login!\n');
+  console.log('\n🎓 STUDENT (Regular User):');
+  console.log('   Email: student@skillpath.com');
+  console.log('   Password: Student@123');
+  console.log('\n📚 CURATOR (Content Management):');
+  console.log('   Email: curator@skillpath.com');
+  console.log('   Password: Curator@123');
+  console.log('\n⚙️  OPS (Operations):');
+  console.log('   Email: ops@skillpath.com');
+  console.log('   Password: Ops@123456');
+  console.log('\n🤝 PARTNER (Partner Organization):');
+  console.log('   Email: partner@skillpath.com');
+  console.log('   Password: Partner@123');
+  console.log('\n⚠️  IMPORTANT: These are test credentials for development only!\n');
 }
 
 main()
