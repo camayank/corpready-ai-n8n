@@ -1,0 +1,359 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  password              String
+  name                  String
+  phone                 String?
+  gender                String?
+  areaOfStudy           String?
+  graduationYear        Int?
+  isEmailVerified       Boolean   @default(false)
+  isOnboardingComplete  Boolean   @default(false)
+  consentGiven          Boolean   @default(false)
+  emailVerificationToken String?
+  passwordResetToken    String?
+  passwordResetExpires  DateTime?
+  refreshToken          String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  courseProgress        CourseProgress[]
+  videoProgress         VideoProgress[]
+  videoNotes            VideoNote[]
+  quizAttempts          QuizAttempt[]
+  certificates          Certificate[]
+  internshipApplications InternshipApplication[]
+  savedInternships      SavedInternship[]
+  mentorshipBookings    MentorshipBooking[]
+  notifications         Notification[]
+
+  @@map("users")
+}
+
+model Domain {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+
+  courses     Course[]
+
+  @@map("domains")
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@map("topics")
+}
+
+model Course {
+  id              String   @id @default(uuid())
+  title           String
+  description     String
+  domain          String
+  domainId        String?
+  targetAudience  String?
+  skillLevel      String?
+  estimatedHours  Int?
+  thumbnail       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  domainRef       Domain?  @relation(fields: [domainId], references: [id])
+  modules         CourseModule[]
+  courseProgress  CourseProgress[]
+  quizzes         Quiz[]
+
+  @@map("courses")
+}
+
+model CourseModule {
+  id          String   @id @default(uuid())
+  courseId    String
+  title       String
+  description String?
+  order       Int
+  createdAt   DateTime @default(now())
+
+  // Relations
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  videos      Video[]
+
+  @@map("course_modules")
+}
+
+model Video {
+  id              String   @id @default(uuid())
+  moduleId        String
+  title           String
+  youtubeId       String
+  duration        Int
+  order           Int
+  transcript      String?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  module          CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  videoProgress   VideoProgress[]
+  videoNotes      VideoNote[]
+
+  @@map("videos")
+}
+
+model VideoProgress {
+  id              String   @id @default(uuid())
+  userId          String
+  videoId         String
+  watchedDuration Int      @default(0)
+  isCompleted     Boolean  @default(false)
+  lastWatchedAt   DateTime @default(now())
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video           Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoId])
+  @@map("video_progress")
+}
+
+model VideoNote {
+  id          String   @id @default(uuid())
+  userId      String
+  videoId     String
+  content     String
+  timestamp   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@map("video_notes")
+}
+
+model CourseProgress {
+  id              String   @id @default(uuid())
+  userId          String
+  courseId        String
+  progress        Int      @default(0)
+  isCompleted     Boolean  @default(false)
+  enrolledAt      DateTime @default(now())
+  completedAt     DateTime?
+  lastAccessedAt  DateTime @default(now())
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("course_progress")
+}
+
+model Quiz {
+  id              String   @id @default(uuid())
+  courseId        String
+  title           String
+  description     String?
+  passingScore    Int      @default(70)
+  timeLimit       Int?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions       QuizQuestion[]
+  attempts        QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id          String   @id @default(uuid())
+  quizId      String
+  question    String
+  options     Json
+  correctAnswer String
+  explanation String?
+  order       Int
+
+  // Relations
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(uuid())
+  userId      String
+  quizId      String
+  answers     Json
+  score       Int
+  passed      Boolean
+  completedAt DateTime @default(now())
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_attempts")
+}
+
+model Certificate {
+  id              String   @id @default(uuid())
+  userId          String
+  courseId        String
+  certificateCode String   @unique
+  issuedAt        DateTime @default(now())
+  pdfUrl          String?
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+model Internship {
+  id              String   @id @default(uuid())
+  title           String
+  company         String
+  description     String
+  location        String?
+  stipend         String?
+  duration        String?
+  requiredSkills  Json
+  eligibility     Json?
+  applicationDeadline DateTime?
+  startDate       DateTime?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  // Relations
+  applications    InternshipApplication[]
+  savedBy         SavedInternship[]
+
+  @@map("internships")
+}
+
+model InternshipApplication {
+  id              String   @id @default(uuid())
+  userId          String
+  internshipId    String
+  status          String   @default("pending")
+  appliedAt       DateTime @default(now())
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  internship      Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, internshipId])
+  @@map("internship_applications")
+}
+
+model SavedInternship {
+  id              String   @id @default(uuid())
+  userId          String
+  internshipId    String
+  savedAt         DateTime @default(now())
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  internship      Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, internshipId])
+  @@map("saved_internships")
+}
+
+model Mentor {
+  id              String   @id @default(uuid())
+  name            String
+  title           String
+  company         String
+  expertise       Json
+  bio             String
+  imageUrl        String?
+  linkedinUrl     String?
+  rating          Float?
+  totalSessions   Int      @default(0)
+  createdAt       DateTime @default(now())
+
+  // Relations
+  timeSlots       TimeSlot[]
+  bookings        MentorshipBooking[]
+
+  @@map("mentors")
+}
+
+model TimeSlot {
+  id              String   @id @default(uuid())
+  mentorId        String
+  startTime       DateTime
+  endTime         DateTime
+  isBooked        Boolean  @default(false)
+
+  // Relations
+  mentor          Mentor   @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@map("time_slots")
+}
+
+model MentorshipBooking {
+  id              String   @id @default(uuid())
+  userId          String
+  mentorId        String
+  sessionDate     DateTime
+  duration        Int
+  topic           String?
+  status          String   @default("scheduled")
+  meetingLink     String?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mentor          Mentor   @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@map("mentorship_bookings")
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  link        String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model PremiumLead {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String
+  message     String?
+  createdAt   DateTime @default(now())
+
+  @@map("premium_leads")
+}
