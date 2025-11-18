@@ -9,7 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 
 // Guards
 import { AuthGuard } from "@/components/guards/AuthGuard";
-import { EmailVerifiedGuard } from "@/components/guards/EmailVerifiedGuard";
+// import { EmailVerifiedGuard } from "@/components/guards/EmailVerifiedGuard"; // Disabled - email verification not required
 import { OnboardingGuard } from "@/components/guards/OnboardingGuard";
 import { AdminGuard } from "@/components/guards/AdminGuard";
 
@@ -73,28 +73,24 @@ const App = () => (
               }
             />
 
-            {/* Onboarding (requires auth + email verified) */}
+            {/* Onboarding (requires auth only - email verification disabled) */}
             <Route
               path="/onboarding"
               element={
                 <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <Onboarding />
-                  </EmailVerifiedGuard>
+                  <Onboarding />
                 </AuthGuard>
               }
             />
 
-            {/* Protected App Routes (requires auth + email verified + onboarding complete) */}
+            {/* Protected App Routes (requires auth + onboarding complete) */}
             <Route
               path="/app"
               element={
                 <AuthGuard>
-                  <EmailVerifiedGuard>
-                    <OnboardingGuard>
-                      <UserLayout />
-                    </OnboardingGuard>
-                  </EmailVerifiedGuard>
+                  <OnboardingGuard>
+                    <UserLayout />
+                  </OnboardingGuard>
                 </AuthGuard>
               }
             >

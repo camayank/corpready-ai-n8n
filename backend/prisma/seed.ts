@@ -7,7 +7,7 @@ async function main() {
   console.log('Starting seed...');
 
   // Create admin user
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@skillpath.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@corpready.in';
   const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
   const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
@@ -34,7 +34,7 @@ async function main() {
   // Create test users for all roles
   const testUsers = [
     {
-      email: 'student@skillpath.com',
+      email: 'student@corpready.in',
       password: 'Student@123',
       name: 'Test Student',
       role: UserRole.USER,
@@ -46,7 +46,7 @@ async function main() {
       graduationYear: 2024,
     },
     {
-      email: 'curator@skillpath.com',
+      email: 'curator@corpready.in',
       password: 'Curator@123',
       name: 'Content Curator',
       role: UserRole.CURATOR,
@@ -56,7 +56,7 @@ async function main() {
       consentGiven: true,
     },
     {
-      email: 'ops@skillpath.com',
+      email: 'ops@corpready.in',
       password: 'Ops@123456',
       name: 'Operations Manager',
       role: UserRole.OPS,
@@ -66,7 +66,7 @@ async function main() {
       consentGiven: true,
     },
     {
-      email: 'partner@skillpath.com',
+      email: 'partner@corpready.in',
       password: 'Partner@123',
       name: 'Partner Organization',
       role: UserRole.PARTNER,
@@ -162,22 +162,23 @@ async function main() {
   }
 
   console.log('🌱 Seed completed successfully!');
-  console.log('\n📝 Test Credentials for All Roles:');
+  console.log('\n📝 CorpReady Test Credentials:');
   console.log('\n👨‍💼 ADMIN (Full System Access):');
   console.log(`   Email: ${adminEmail}`);
   console.log(`   Password: ${adminPassword}`);
   console.log('\n🎓 STUDENT (Regular User):');
-  console.log('   Email: student@skillpath.com');
+  console.log('   Email: student@corpready.in');
   console.log('   Password: Student@123');
   console.log('\n📚 CURATOR (Content Management):');
-  console.log('   Email: curator@skillpath.com');
+  console.log('   Email: curator@corpready.in');
   console.log('   Password: Curator@123');
   console.log('\n⚙️  OPS (Operations):');
-  console.log('   Email: ops@skillpath.com');
+  console.log('   Email: ops@corpready.in');
   console.log('   Password: Ops@123456');
   console.log('\n🤝 PARTNER (Partner Organization):');
-  console.log('   Email: partner@skillpath.com');
+  console.log('   Email: partner@corpready.in');
   console.log('   Password: Partner@123');
+  console.log('\n🚀 DEV LOGIN: Use POST /api/auth/dev-login for instant access (no credentials needed)');
   console.log('\n⚠️  IMPORTANT: These are test credentials for development only!\n');
 }
 

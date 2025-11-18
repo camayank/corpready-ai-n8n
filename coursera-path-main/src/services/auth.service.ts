@@ -68,6 +68,10 @@ class AuthService {
     return apiClient.get<User>('/auth/me');
   }
 
+  async devLogin(role?: 'USER' | 'ADMIN' | 'CURATOR' | 'OPS' | 'PARTNER'): Promise<AuthResponse> {
+    return apiClient.post<AuthResponse>('/auth/dev-login', { role });
+  }
+
   // Token management in localStorage
   saveTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem('accessToken', accessToken);

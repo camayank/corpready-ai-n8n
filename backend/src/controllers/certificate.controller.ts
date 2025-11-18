@@ -1,6 +1,8 @@
 import { Response } from 'express';
 import prisma from '../utils/db';
 import { AuthRequest } from '../middleware/auth';
+import { generateCertificatePDF } from '../utils/pdf';
+import fs from 'fs';
 
 export const getMyCertificates = async (req: AuthRequest, res: Response) => {
   try {
@@ -80,9 +82,29 @@ export const downloadCertificate = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Certificate not found' });
     }
 
-    // TODO: Generate PDF certificate
-    res.json({ message: 'PDF generation not yet implemented', certificate });
+    // Generate PDF certificate
+    const pdfPath = await generateCertificatePDF({
+      id: certificate.id,
+      userName: certificate.user.name,
+      courseName: certificate.courseName,
+      completionDate: certificate.issuedAt,
+      certificateCode: certificate.certificateCode,
+    });
+
+    // Check if file exists
+    if (!fs.existsSync(pdfPath)) {
+      return res.status(500).json({ error: 'Failed to generate certificate PDF' });
+    }
+
+    // Send file
+    res.download(pdfPath, `${certificate.courseName}-Certificate.pdf`, (err) => {
+      if (err) {
+        console.error('Download error:', err);
+        res.status(500).json({ error: 'Failed to download certificate' });
+      }
+    });
   } catch (error) {
+    console.error('Certificate download error:', error);
     res.status(500).json({ error: 'Failed to download certificate' });
   }
 };

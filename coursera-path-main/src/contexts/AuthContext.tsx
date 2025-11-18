@@ -41,6 +41,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const refreshToken = authService.getRefreshToken();
 
     if (!accessToken || !refreshToken) {
+      // Auto-login in development mode
+      if (import.meta.env.DEV) {
+        try {
+          console.log('🔧 Development Mode: Auto-logging in...');
+          const response = await authService.devLogin();
+          authService.saveTokens(response.accessToken, response.refreshToken);
+          setUser(response.user);
+          console.log(`✅ Auto-logged in as ${response.user.email} (${response.user.role})`);
+        } catch (error) {
+          console.error('Dev login failed:', error);
+        }
+      }
       setIsLoading(false);
       return;
     }
@@ -59,9 +71,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } catch (refreshError) {
           // Refresh failed, clear tokens
           authService.clearTokens();
+          // Try dev login in development
+          if (import.meta.env.DEV) {
+            try {
+              console.log('🔧 Development Mode: Re-authenticating...');
+              const response = await authService.devLogin();
+              authService.saveTokens(response.accessToken, response.refreshToken);
+              setUser(response.user);
+            } catch (devError) {
+              console.error('Dev login failed:', devError);
+            }
+          }
         }
       } else {
         authService.clearTokens();
+        // Try dev login in development
+        if (import.meta.env.DEV) {
+          try {
+            console.log('🔧 Development Mode: Auto-logging in...');
+            const response = await authService.devLogin();
+            authService.saveTokens(response.accessToken, response.refreshToken);
+            setUser(response.user);
+          } catch (devError) {
+            console.error('Dev login failed:', devError);
+          }
+        }
       }
     } finally {
       setIsLoading(false);
