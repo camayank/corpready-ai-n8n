@@ -13,10 +13,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle, Send, Search, Eye, ThumbsUp } from "lucide-react";
+import { BookOpen, Sparkles, ArrowRight, ArrowLeft, Play, Clock, Target, CheckCircle, Send, Search, Eye, ThumbsUp, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { youtubeService, YouTubeVideo } from "@/services/youtube.service";
 import { YouTubeVideoCard } from "@/components/YouTubeVideoCard";
+import { AnimatedProgress } from "@/components/AnimatedProgress";
+import { SuccessAnimation } from "@/components/SuccessAnimation";
+import { ErrorState } from "@/components/ErrorState";
+import { VideoPreviewSkeleton, CourseCardSkeleton, TopicInputSkeleton } from "@/components/skeletons/CurationSkeletons";
 
 const CourseCurate = () => {
   const navigate = useNavigate();
@@ -29,6 +33,8 @@ const CourseCurate = () => {
   const [previewVideos, setPreviewVideos] = useState<YouTubeVideo[]>([]);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [youtubeConfigured, setYoutubeConfigured] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [generationError, setGenerationError] = useState<{ type: "network" | "server" | "api" | "generic"; message?: string } | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -118,6 +124,7 @@ const CourseCurate = () => {
     }
 
     setIsGenerating(true);
+    setGenerationError(null);
 
     try {
       // Construct message for n8n workflow
@@ -137,7 +144,14 @@ const CourseCurate = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate curriculum');
+        if (response.status === 404) {
+          throw new Error('network');
+        } else if (response.status >= 500) {
+          throw new Error('server');
+        } else if (response.status === 429) {
+          throw new Error('api');
+        }
+        throw new Error('generic');
       }
 
       const data = await response.json();
@@ -148,7 +162,15 @@ const CourseCurate = () => {
 
       setCuratedCourses(parsedCourses);
       setIsGenerating(false);
-      setStep(3);
+
+      // Show success animation
+      setShowSuccess(true);
+
+      // Move to results step after animation
+      setTimeout(() => {
+        setShowSuccess(false);
+        setStep(3);
+      }, 2000);
 
       toast({
         title: "Success!",
@@ -157,17 +179,32 @@ const CourseCurate = () => {
     } catch (error: any) {
       console.error('N8N workflow error:', error);
 
-      // Fallback to mock data if n8n fails
-      toast({
-        title: "Using demo data",
-        description: "N8N workflow unavailable, showing example curriculum",
-        variant: "default",
-      });
-
-      const mockCourses = generateMockCourses();
-      setCuratedCourses(mockCourses);
       setIsGenerating(false);
-      setStep(3);
+
+      // Determine error type
+      const errorType = error.message === 'network' || error.message === 'Failed to fetch'
+        ? 'network'
+        : error.message === 'server'
+        ? 'server'
+        : error.message === 'api'
+        ? 'api'
+        : 'generic';
+
+      setGenerationError({ type: errorType });
+
+      // Fallback to mock data after showing error
+      setTimeout(() => {
+        toast({
+          title: "Using demo data",
+          description: "Showing example curriculum for demonstration",
+          variant: "default",
+        });
+
+        const mockCourses = generateMockCourses();
+        setCuratedCourses(mockCourses);
+        setGenerationError(null);
+        setStep(3);
+      }, 3000);
     }
   };
 
@@ -394,11 +431,12 @@ const CourseCurate = () => {
             className="mt-1.5"
           />
           <div className="flex flex-wrap gap-2 mt-3">
-            {topicSuggestions.slice(0, 6).map((topic) => (
+            {topicSuggestions.slice(0, 6).map((topic, index) => (
               <Badge
                 key={topic}
                 variant="outline"
-                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all-smooth hover:scale-105 active:scale-95 animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
                 onClick={() => setFormData({ ...formData, learningTopic: topic })}
               >
                 {topic}
@@ -408,14 +446,18 @@ const CourseCurate = () => {
 
           {/* YouTube Video Preview */}
           {formData.learningTopic && previewVideos.length > 0 && (
-            <div className="mt-6">
+            <div className="mt-6 animate-fade-in">
               <div className="flex items-center gap-2 mb-3">
                 <Search className="w-4 h-4 text-primary" />
                 <h4 className="font-semibold text-sm">Sample videos for "{formData.learningTopic}"</h4>
               </div>
-              <div className="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
-                {previewVideos.slice(0, 4).map((video) => (
-                  <div key={video.id} className="relative group">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
+                {previewVideos.slice(0, 4).map((video, index) => (
+                  <div
+                    key={video.id}
+                    className="relative group animate-scale-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
                     <img
                       src={video.thumbnail.medium}
                       alt={video.title}
@@ -453,10 +495,15 @@ const CourseCurate = () => {
           )}
 
           {isLoadingPreview && formData.learningTopic && (
-            <div className="mt-4 text-center">
-              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                <Sparkles className="w-4 h-4 animate-pulse" />
-                Loading video previews...
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-primary animate-spin-slow" />
+                <h4 className="font-semibold text-sm">Finding best videos for "{formData.learningTopic}"...</h4>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <VideoPreviewSkeleton key={i} />
+                ))}
               </div>
             </div>
           )}
@@ -530,8 +577,8 @@ const CourseCurate = () => {
 
   const renderCuratedResults = () => (
     <div className="space-y-6">
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-hero mx-auto mb-4 flex items-center justify-center">
+      <div className="text-center animate-fade-in">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-hero mx-auto mb-4 flex items-center justify-center animate-bounce-subtle">
           <Sparkles className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-2xl font-bold mb-2">Your Personalized Learning Path</h2>
@@ -539,8 +586,12 @@ const CourseCurate = () => {
       </div>
 
       <div className="space-y-6">
-        {curatedCourses.map((course) => (
-          <Card key={course.id} className="p-6 shadow-medium hover:shadow-large transition-all">
+        {curatedCourses.map((course, index) => (
+          <Card
+            key={course.id}
+            className="p-6 shadow-medium hover-lift animate-fade-in"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
             <div className="mb-6">
               <Badge className="mb-2">{course.category}</Badge>
               <h3 className="text-xl font-bold mb-2">{course.title}</h3>
@@ -576,9 +627,13 @@ const CourseCurate = () => {
                   <Play className="w-4 h-4 text-primary" />
                   Course Videos ({course.videos.length})
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {course.videos.map((video: any) => (
-                    <div key={video.id} className="group">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {course.videos.map((video: any, videoIndex: number) => (
+                    <div
+                      key={video.id}
+                      className="group animate-fade-in"
+                      style={{ animationDelay: `${videoIndex * 0.05}s` }}
+                    >
                       <div className="relative rounded-lg overflow-hidden mb-2">
                         <img
                           src={video.thumbnail || `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
@@ -645,6 +700,12 @@ const CourseCurate = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Success Animation Overlay */}
+      <SuccessAnimation
+        show={showSuccess}
+        onComplete={() => setShowSuccess(false)}
+      />
+
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -683,14 +744,39 @@ const CourseCurate = () => {
             </div>
           )}
 
-          {/* Step Content */}
-          <Card className="p-8 shadow-large">
-            {step === 1 && renderStep1()}
-            {step === 2 && renderStep2()}
-            {step === 3 && renderCuratedResults()}
+          {/* Animated Progress During Generation */}
+          {isGenerating && (
+            <div className="animate-fade-in">
+              <AnimatedProgress isGenerating={isGenerating} />
+            </div>
+          )}
 
-            {/* Navigation Buttons */}
-            {step < 3 && (
+          {/* Error State */}
+          {generationError && !isGenerating && (
+            <div className="animate-scale-in">
+              <ErrorState
+                type={generationError.type}
+                message={generationError.message}
+                onRetry={() => {
+                  setGenerationError(null);
+                  handleGenerate();
+                }}
+                onBack={() => setGenerationError(null)}
+                showRetry={true}
+                showBack={true}
+              />
+            </div>
+          )}
+
+          {/* Step Content */}
+          {!isGenerating && !generationError && (
+            <Card className="p-8 shadow-large animate-fade-in">
+              {step === 1 && renderStep1()}
+              {step === 2 && renderStep2()}
+              {step === 3 && renderCuratedResults()}
+
+              {/* Navigation Buttons */}
+              {step < 3 && (
               <div className="flex justify-between mt-8 pt-6 border-t">
                 {step > 1 ? (
                   <Button variant="ghost" onClick={() => setStep(step - 1)}>
@@ -726,8 +812,9 @@ const CourseCurate = () => {
                   </Button>
                 )}
               </div>
-            )}
-          </Card>
+              )}
+            </Card>
+          )}
         </div>
       </main>
     </div>
