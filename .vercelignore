@@ -1,0 +1,11 @@
+backend/
+.git/
+node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+docker-compose.yml
+Dockerfile*
+nginx.conf
+*.zip
