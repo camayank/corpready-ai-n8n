@@ -28,9 +28,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Trust proxy for Replit environment
-app.set('trust proxy', 1);
-
 // Middleware
 app.use(helmet());
 app.use(cors({
@@ -69,7 +66,7 @@ app.use('/api/admin', adminRoutes);
 // Error handler (must be last)
 app.use(errorHandler);
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📝 Environment: ${process.env.NODE_ENV}`);
 });

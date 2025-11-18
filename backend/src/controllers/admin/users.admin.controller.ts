@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middleware/auth';
-import prisma from '../../utils/db';
+import { prisma } from '../../lib/prisma';
 import { createAuditLog, getIpAddress, AuditActions, TargetTypes } from '../../utils/auditLog';
 import bcrypt from 'bcryptjs';
 import { UserRole } from '@prisma/client';

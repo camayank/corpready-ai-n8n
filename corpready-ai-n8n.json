@@ -1,0 +1,638 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1160,
+        88
+      ],
+      "id": "d9303d4b-71af-48d7-a750-ab731919e977",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        -448
+      ],
+      "id": "74b9174d-2bc4-4bcc-9e86-47675f7c6c1d",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "XN98DL9t39W5bLAk",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a friendly conversational tutor. \n\nAlways reply naturally and ask about the user this 3 question first step by step in conversatinal mode these questions are important.\n  1) Who they are (student / working professional / business owner / other),\n  2) What topic they want to learn,\n  3) Why They want to Learn this (exam / job / business / curiosity).\n\nBased on these ask the user what topic they want to learn.\n\nwhen you got the above 3 answers then show that answers to the user and finalize the topic that the user want to learn and highlisht the topic that they want to learn.\n\nIf the user already states a topic (example: \"I want to learn financial Modelling\"), acknowledge it briefly and keep the tone helpful. Keep convesations short and single line.\nDo NOT output JSON or trigger any backend logic here. Just talk."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1296,
+        -136
+      ],
+      "id": "42f523fb-f9bf-480a-ab2f-42ae2afb99d5",
+      "name": "Chat — Normal Reply"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋 This is CorpReady's AI.",
+        "options": {
+          "inputPlaceholder": "Just type here what you want to learn",
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1520,
+        -136
+      ],
+      "id": "648074c1-e00c-4b27-a785-b5fbb9fb2fa1",
+      "name": "When chat message received",
+      "webhookId": "9291673e-e3f2-47ed-9113-f70dbb32fef4",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer api-key"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"meta-llama/llama-4-maverick:free\",\n  \"temperature\": 0,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Respond ONLY with valid JSON: {\\\"type\\\":\\\"learn_intent|no_intent\\\", \\\"intentText\\\":\\\"\\\"}.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"User said: '{{ $('When chat message received').item.json.chatInput }}'. If they want to learn something (example: I want to learn SEO), set type='learn_intent' and extract the topic into intentText. Otherwise return type='no_intent'.\"\n    }\n  ]\n}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1520,
+        -672
+      ],
+      "id": "5baf7fa6-3590-47df-88c8-88da7b057e48",
+      "name": "Intent Detector",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// If the Intent Detector returned an ARRAY (common), use the first item\nlet item = Array.isArray($json) ? $json[0] : $json;\n\n// Extract outer structure\nlet raw = item;\n\n// If OpenRouter-style response is present, parse it\nif (raw.choices && raw.choices[0]?.message?.content) {\n  try {\n    raw = JSON.parse(raw.choices[0].message.content);\n  } catch (e) {\n    raw = {};\n  }\n}\n\n// Helper to ensure non-empty strings\nconst nonEmpty = (v) => typeof v === \"string\" && v.trim() !== \"\";\n\n// Validate all 4 fields\nconst valid =\n  raw.type === \"learn_intent\" &&\n  nonEmpty(raw.intentText) &&\n  nonEmpty(raw.user_type) &&\n  nonEmpty(raw.reason);\n\n// If ANY condition fails → STOP WORKFLOW\nif (!valid) {\n  return [];\n}\n\n// If valid → return clean output\nreturn [\n  {\n    json: {\n      intent: raw.intentText.toLowerCase().trim(),\n      user_type: raw.user_type.trim(),\n      reason: raw.reason.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        -64
+      ],
+      "id": "3e5e8af0-b960-49a2-b7ed-3881952540e2",
+      "name": "Route Intent Result"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer api-key"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"temperature\": 0.2,\n  \"messages\": [\n    { \"role\": \"system\", \"content\": \"You ar-e a structured curriculum designer. Reply ONLY with a JSON array of  concise topic strings (no extra text).\" },\n    { \"role\": \"user\", \"content\": \"Create 8-9 non-repeated, non-overlapping module structured flow of titles (2–6 words each) for the subject: {{ $json.intent }} and user persona as user type:'{{ $json.user_type }}'and reason to learn is:'{{ $json.reason }}'  always keep intent topic name before each topic name. Return valid JSON array: [\\\"Topic A\\\",\\\"Topic B\\\",...]\" }\n  ]\n}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -272,
+        -16
+      ],
+      "id": "17f10ff9-b1dd-416a-a540-6374d8448ccf",
+      "name": "Generate Topics"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1288,
+        88
+      ],
+      "id": "59d9fec3-dc84-4d08-a6b9-5c60bf05f937",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "H5cuaQGG9DM59dWe",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer api-key"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"temperature\": 0,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Respond ONLY with valid JSON: {\\\"type\\\":\\\"learn_intent|no_intent\\\", \\\"intentText\\\":\\\"\\\"}.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"User said: '{{ $('When chat message received').item.json.chatInput }}' system output:'{{ $json.output }}' . when ever you got 3 answers like who is he, what he want to learn, and why he want to learn (Example: So to recap, you're a **student** who wants to learn about **business valuation** because you're preparing for a **job**, is that correct, and would you like to dive deeper into this topic now that we've confirmed your goals?),check the chat clearly for any topic that the user wants to learn, dont make assumption the user or system will mention clearly mention the topic that he want to lean. set type='learn_intent' and extract the topic into intentText. Otherwise return type='no_intent'. also keep who is into 'user_type' and why he want to learn into 'reason' if the reason is unknow dont pass any data just leave empty dont pass data as unknown\"\n    }\n  ]\n}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -944,
+        -64
+      ],
+      "id": "1aa18398-7240-4d7f-be00-e045fdeadfd7",
+      "name": "Intent Detector1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create Topic Items - robust parser for LLM output\nlet payload = $json;\n\n// if wrapper array, take first\nif (Array.isArray(payload) && payload.length) payload = payload[0];\n\n// try common OpenAI/OpenRouter shape: choices[0].message.content\nlet content = null;\nif (payload.choices && payload.choices[0] && payload.choices[0].message && typeof payload.choices[0].message.content === 'string') {\n  content = payload.choices[0].message.content;\n} else if (typeof payload === 'string') {\n  content = payload;\n} else if (Array.isArray(payload)) {\n  // already an array of strings\n  return payload.map(t => ({ json: { topic: String(t).trim() } }));\n} else if (payload && payload[0] && payload[0].topic) {\n  // already in desired format\n  return payload.map(i => ({ json: { topic: i.topic } }));\n}\n\n// attempt to parse JSON array from content\nlet topics = [];\nif (content) {\n  try {\n    const parsed = JSON.parse(content);\n    if (Array.isArray(parsed)) topics = parsed;\n    else if (parsed.topics && Array.isArray(parsed.topics)) topics = parsed.topics;\n  } catch(e) {\n    // no-op, will fallback to text splitting\n  }\n}\n\n// fallback: extract lines or comma-separated tokens\nif (!topics.length && content) {\n  // remove leading/trailing backticks or code fences\n  content = content.replace(/^```[\\s\\S]*?\\n|```$/g, '').trim();\n  // split by newline and commas, then clean\n  topics = content.split(/\\r?\\n|,/).map(s => s.trim()).filter(Boolean);\n}\n\n// final sanitise: ensure unique, non-empty, max 12 items\nconst seen = new Set();\ntopics = topics.map(t => String(t).trim()).filter(t => t && !seen.has(t.toLowerCase()) && (seen.add(t.toLowerCase()))) .slice(0, 12);\n\n// return as separate items\nreturn topics.map(t => ({ json: { topic: t } }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        -16
+      ],
+      "id": "57635359-50e5-4379-9b39-9e3c9dc9dfb6",
+      "name": "Create Topic Items"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        176,
+        -16
+      ],
+      "id": "e92f44cb-df47-4f7f-a4d4-0ec5e5d9f57a",
+      "name": "Split Topics"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/youtube/v3/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet"
+            },
+            {
+              "name": "type",
+              "value": "video"
+            },
+            {
+              "name": "q",
+              "value": "={{ $json.topic + \" tutorial\" }}"
+            },
+            {
+              "name": "maxResults",
+              "value": "1"
+            },
+            {
+              "name": "key",
+              "value": "api-key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        8
+      ],
+      "id": "5883b2ab-9b7f-411a-a127-3d68f9c080c8",
+      "name": "YouTube Search"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $json.items || [];\nif (!items.length) {\n  return [{ json: { topic: $json.topic, videoId: null } }];\n}\n\nconst videoId = items[0].id.videoId;\n\nreturn [{\n  json: {\n    topic: $json.topic,\n    videoId\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        8
+      ],
+      "id": "fe603587-4124-497b-98d5-af89ff6c3f99",
+      "name": "Extract Video ID"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/youtube/v3/videos",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "part",
+              "value": "snippet,contentDetails,statistics"
+            },
+            {
+              "name": "id",
+              "value": "={{ $json.videoId }}"
+            },
+            {
+              "name": "key",
+              "value": "api-key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        848,
+        8
+      ],
+      "id": "34a74537-cfb6-476d-8775-a2e3ec072d4e",
+      "name": "Video Details"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = Array.isArray($json) ? $json[0] : $json;\nconst item = payload.items?.[0] || null;\n\nif (!item) {\n  return [{\n    json: {\n      topic: $json.topic,\n      selectedVideo: null\n    }\n  }];\n}\n\nconst v = item;\n\nconst selected = {\n  videoId: v.id,\n  title: v.snippet?.title || \"\",\n  url: `https://www.youtube.com/watch?v=${v.id}`,\n  views: Number(v.statistics?.viewCount || 0),\n  likes: Number(v.statistics?.likeCount || 0),\n  duration: v.contentDetails?.duration || \"\",\n  publishedAt: v.snippet?.publishedAt || \"\",\n  thumbnail: v.snippet?.thumbnails?.high?.url || \"\",\n  channel: v.snippet?.channelTitle || \"\"\n};\n\nreturn [{\n  json: {\n    topic: $json.topic,\n    selectedVideo: selected\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        152
+      ],
+      "id": "8fc2ca0d-d10e-4355-8991-2b26398529f2",
+      "name": "Pick Top Video"
+    },
+    {
+      "parameters": {
+        "jsCode": "// items = merged Pick-Top-Video results\nconst items = $items().map(i => i.json).filter(Boolean);\n\n// MAIN TOPIC: always read from Route Intent Result\nlet mainTopic = \"\";\ntry {\n  mainTopic = $('Route Intent Result').first().json.intent || \"\";\n} catch(e) {}\n\nif (!mainTopic || typeof mainTopic !== \"string\") {\n  mainTopic = \"Your Topic\";\n}\n\n// BUILD OUTPUT\nlet out = \"\";\nout += `**Topic:** ${mainTopic}\\n`;\nout += `**Curated By:** CorpReady\\n\\n`;\nout += `**Your curated learning pathway for ${mainTopic}:**\\n\\n`;\n\nitems.forEach((it, idx) => {\n  const n = idx + 1;\n  \n  // topic name for this module\n  const topicName = (it.topic || (it.selectedVideo?.title) || `Topic ${n}`).trim();\n  \n  // video URL\n  const v = it.selectedVideo || {};\n  const url = v.url || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : \"\");\n  \n  // clickable markdown link\n  const mdLink = url ? `[${url}](${url})` : topicName;\n\n  out += `${n}. **${topicName}**: ${mdLink}\\n\\n`;\n});\n\nout += `Happy learning!`;\n\nreturn [{ json: { display: out } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -184
+      ],
+      "id": "ffd827e8-daa8-4334-8134-4ced59522e82",
+      "name": "Structure Message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c6f2be3c-9bb4-4e77-b01a-a6f235682d9b",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        -64
+      ],
+      "id": "47ccb44a-7c7d-40a6-a2db-8a20c0f96da6",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -352,
+        -288
+      ],
+      "id": "33a66bfe-af2c-4d5e-a107-94431acd0c82",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        -232
+      ],
+      "id": "d9df3fbe-8e77-4719-a5b2-f7e8fff244ec",
+      "name": "Respond to Chat"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.display }}",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -184
+      ],
+      "id": "8cb997d9-1e3d-4f4f-a5c9-52549e92b1c4",
+      "name": "Respond to Chat1"
+    }
+  ],
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chat — Normal Reply",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Chat — Normal Reply": {
+      "main": [
+        [
+          {
+            "node": "Intent Detector1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Chat — Normal Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intent Detector": {
+      "main": [
+        []
+      ]
+    },
+    "Route Intent Result": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Topics": {
+      "main": [
+        [
+          {
+            "node": "Create Topic Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chat — Normal Reply",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intent Detector1": {
+      "main": [
+        [
+          {
+            "node": "Route Intent Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Topic Items": {
+      "main": [
+        [
+          {
+            "node": "Split Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Topics": {
+      "main": [
+        [
+          {
+            "node": "Structure Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YouTube Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube Search": {
+      "main": [
+        [
+          {
+            "node": "Extract Video ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Video ID": {
+      "main": [
+        [
+          {
+            "node": "Video Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Details": {
+      "main": [
+        [
+          {
+            "node": "Pick Top Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick Top Video": {
+      "main": [
+        [
+          {
+            "node": "Split Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Generate Topics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6cefdcbea1b86bb2bf8eb1d2b181f2c390369c2dc96dc3d139288ad44dcaf828"
+  }
+}

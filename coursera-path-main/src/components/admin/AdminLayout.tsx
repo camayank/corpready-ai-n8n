@@ -50,7 +50,10 @@ export const AdminLayout = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady Admin</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold leading-tight">CorpReady</span>
+              <span className="text-[10px] text-muted-foreground -mt-0.5">Admin Portal</span>
+            </div>
           </Link>
         </div>
 

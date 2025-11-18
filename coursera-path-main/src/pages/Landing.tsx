@@ -21,87 +21,87 @@ import {
 const Landing = () => {
   const tracks = [
     {
-      title: "Leadership & Management",
-      description: "Build executive skills, team management, and strategic thinking",
-      icon: Users,
-      courses: 42,
-      students: "25k+",
-      difficulty: "Intermediate to Advanced",
-    },
-    {
-      title: "Technology & Innovation",
-      description: "Digital transformation, AI/ML, and emerging technologies",
+      title: "Data Analytics",
+      description: "Master data analysis, visualization, and insights",
       icon: TrendingUp,
-      courses: 58,
-      students: "32k+",
-      difficulty: "All Levels",
+      courses: 24,
+      students: "12k+",
+      difficulty: "Beginner to Advanced",
     },
     {
-      title: "Sales & Marketing",
-      description: "Growth strategies, B2B sales, and digital marketing excellence",
-      icon: Target,
-      courses: 36,
+      title: "Web Development",
+      description: "Build modern, responsive web applications",
+      icon: BookOpen,
+      courses: 32,
       students: "18k+",
       difficulty: "Beginner to Advanced",
+    },
+    {
+      title: "Digital Marketing",
+      description: "Learn SEO, social media, and growth strategies",
+      icon: Target,
+      courses: 18,
+      students: "9k+",
+      difficulty: "Beginner to Intermediate",
     },
   ];
 
   const steps = [
     {
       number: "01",
-      title: "AI-Powered Skill Assessment",
+      title: "AI Curates Your Path",
       description:
-        "Identify skill gaps and training needs with intelligent assessments. Our AI creates personalized learning roadmaps.",
+        "Tell us your interests and goals. Our AI selects the perfect YouTube videos tailored just for you.",
       icon: Sparkles,
     },
     {
       number: "02",
-      title: "Corporate Training Programs",
+      title: "Learn & Prove Skills",
       description:
-        "Engage teams with curated content and industry certifications. Track progress with advanced analytics.",
+        "Watch curated videos and complete AI-generated quizzes. Earn certificates that showcase your expertise.",
       icon: Trophy,
     },
     {
       number: "03",
-      title: "Talent Marketplace",
+      title: "Get Internships",
       description:
-        "Connect skilled professionals with opportunities. Build high-performing teams efficiently.",
+        "Access matched internship opportunities from verified companies. Your skills open doors.",
       icon: Briefcase,
     },
   ];
 
   const testimonials = [
     {
-      name: "Rajesh Kumar",
-      role: "HR Director",
-      college: "TechCorp Solutions",
+      name: "Priya Sharma",
+      role: "Computer Science Student",
+      college: "Delhi University",
       quote:
-        "CorpReady transformed our workforce development. Our team's productivity increased by 40% in just 3 months!",
+        "SkillPath helped me land my first internship in just 3 weeks! The AI-curated courses were exactly what I needed.",
       rating: 5,
     },
     {
-      name: "Priya Mehta",
-      role: "L&D Manager",
-      college: "Global Innovations Ltd",
+      name: "Arjun Patel",
+      role: "Marketing Enthusiast",
+      college: "Mumbai University",
       quote:
-        "The AI-powered assessments are game-changing. We can now track skill gaps and measure ROI effectively.",
+        "The personalized learning paths are incredible. I went from zero knowledge to a digital marketing internship.",
       rating: 5,
     },
     {
-      name: "Amit Sharma",
-      role: "CTO",
-      college: "StartupHub India",
+      name: "Sneha Reddy",
+      role: "Engineering Graduate",
+      college: "IIT Hyderabad",
       quote:
-        "CorpReady helped us build a skilled tech team rapidly. The talent matching feature is incredibly accurate.",
+        "The AI quizzes and certificates gave me confidence. Recruiters love the verified skills on my portfolio.",
       rating: 5,
     },
   ];
 
   const stats = [
-    { value: "500+", label: "Enterprise Clients" },
-    { value: "50k+", label: "Professionals Trained" },
-    { value: "1000+", label: "Career Opportunities" },
-    { value: "98%", label: "Satisfaction Rate" },
+    { value: "50k+", label: "Active Students" },
+    { value: "200+", label: "Curated Courses" },
+    { value: "1000+", label: "Internships" },
+    { value: "95%", label: "Success Rate" },
   ];
 
   return (
@@ -113,20 +113,20 @@ const Landing = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady</span>
+            <span className="text-xl font-bold">SkillPath India</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Programs
+              Courses
             </Link>
             <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Opportunities
+              Internships
             </Link>
             <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
               Mentorship
             </Link>
             <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              For Enterprises
+              For Institutions
             </Link>
           </nav>
           <div className="flex items-center gap-3">
@@ -146,29 +146,29 @@ const Landing = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 opacity-30" style={{background: 'var(--gradient-mesh)'}}></div>
+        <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 glass shadow-glass px-4 py-2 text-primary border-primary/20">
-              🚀 AI-Powered Corporate Training Platform
+            <Badge className="mb-6 bg-accent/10 text-accent border-accent/20">
+              🚀 AI-Powered Learning Platform for India
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Upskill Your Workforce.
+              Learn Fast. Prove Skills.
               <br />
-              <span className="bg-gradient-hero bg-clip-text text-transparent">Drive Business Growth.</span>
+              <span className="bg-gradient-hero bg-clip-text text-transparent">Get Internships.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Transform your team with AI-curated learning paths, industry certifications, and verified skill assessments. 
-              Connect talent with opportunities seamlessly.
+              AI curates personalized micro-courses from YouTube videos. Complete quizzes, earn certificates, and connect
+              with verified internship opportunities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">
-                <Button variant="hero" size="lg" className="text-base px-8 shadow-large">
-                  Start Free Trial
+                <Button variant="hero" size="lg" className="text-base px-8">
+                  Start Learning Free
                   <ArrowRight className="ml-2" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="text-base px-8 glass shadow-glass">
+              <Button variant="outline" size="lg" className="text-base px-8">
                 <Play className="mr-2" />
                 Watch Demo
               </Button>
@@ -191,10 +191,10 @@ const Landing = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-4 glass shadow-glass text-secondary border-secondary/20">How It Works</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Transform Your Workforce</h2>
+            <Badge className="mb-4 bg-secondary/10 text-secondary border-secondary/20">How It Works</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Journey to Success</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              From skill assessment to career advancement, we power your entire talent development lifecycle
+              From learning to landing opportunities, we guide you every step of the way
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -219,10 +219,10 @@ const Landing = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-4 glass shadow-glass text-primary border-primary/20">Popular Programs</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Enterprise Training Programs</h2>
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Popular Tracks</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Learning Path</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Industry-leading programs designed for corporate excellence and professional growth
+              Explore curated learning tracks designed for Indian students
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -256,8 +256,8 @@ const Landing = () => {
           </div>
           <div className="text-center mt-10">
             <Link to="/signup">
-              <Button variant="outline" size="lg" className="glass shadow-glass">
-                Explore All Programs
+              <Button variant="outline" size="lg">
+                View All Tracks
                 <ArrowRight className="ml-2" />
               </Button>
             </Link>
@@ -269,10 +269,10 @@ const Landing = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-4 glass shadow-glass text-accent border-accent/20">Success Stories</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Trusted by Leading Organizations</h2>
+            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Success Stories</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Loved by Students Across India</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Join 500+ companies transforming their workforce with CorpReady
+              Join thousands of students who transformed their careers
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -304,28 +304,17 @@ const Landing = () => {
       {/* CTA Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <Card className="p-12 md:p-16 text-center bg-gradient-hero shadow-large animate-gradient relative overflow-hidden">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-            </div>
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Workforce?</h2>
-              <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                Join 500+ enterprises building future-ready teams with CorpReady's AI-powered platform
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/signup">
-                  <Button variant="secondary" size="lg" className="text-base px-8 shadow-large">
-                    Start Free Trial
-                    <ArrowRight className="ml-2" />
-                  </Button>
-                </Link>
-                <Button variant="outline" size="lg" className="text-base px-8 bg-white/10 text-white border-white/30 hover:bg-white/20">
-                  Schedule Demo
-                </Button>
-              </div>
-            </div>
+          <Card className="p-12 md:p-16 text-center bg-gradient-hero shadow-large">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
+            <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+              Join 50,000+ students learning smarter with AI-powered courses
+            </p>
+            <Link to="/signup">
+              <Button variant="secondary" size="lg" className="text-base px-8">
+                Get Started Free
+                <ArrowRight className="ml-2" />
+              </Button>
+            </Link>
           </Card>
         </div>
       </section>
@@ -339,10 +328,10 @@ const Landing = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady</span>
+                <span className="text-lg font-bold">SkillPath India</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                AI-powered corporate training platform connecting professionals to skills and career opportunities.
+                AI-powered learning platform connecting Indian students to skills and opportunities.
               </p>
             </div>
             <div>
@@ -350,17 +339,17 @@ const Landing = () => {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    Training Programs
+                    Browse Courses
                   </Link>
                 </li>
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    Talent Marketplace
+                    Find Internships
                   </Link>
                 </li>
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    Enterprise Solutions
+                    Meet Mentors
                   </Link>
                 </li>
                 <li>
@@ -375,22 +364,22 @@ const Landing = () => {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    About CorpReady
+                    About Us
                   </Link>
                 </li>
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    For Enterprises
+                    For Institutions
                   </Link>
                 </li>
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    Resources
+                    Blog
                   </Link>
                 </li>
                 <li>
                   <Link to="#" className="hover:text-primary transition-colors">
-                    Contact Sales
+                    Contact
                   </Link>
                 </li>
               </ul>
@@ -417,7 +406,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2025 CorpReady by corpready.in. All rights reserved. Empowering professionals, transforming businesses.</p>
+            <p>© 2025 SkillPath India. All rights reserved. Made with ❤️ for Indian students.</p>
           </div>
         </div>
       </footer>

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
-  BookOpen,
   Home,
   Briefcase,
   Users,
@@ -13,16 +12,17 @@ import {
   Search,
   Flame,
   LogOut,
+  Target,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const navigationItems = [
-  { path: '/app', label: 'Home', icon: Home },
-  { path: '/app/curate', label: 'Curate Path', icon: BookOpen },
-  { path: '/app/certificates', label: 'Certificates', icon: GraduationCap },
-  { path: '/app/internships', label: 'Internships', icon: Briefcase },
-  { path: '/app/mentorship', label: 'Mentorship', icon: Users },
+  { path: '/app', label: 'Dashboard', icon: Home },
+  { path: '/app/curate', label: 'Learn & Upskill', icon: Target },
+  { path: '/app/certificates', label: 'Achievements', icon: GraduationCap },
+  { path: '/app/internships', label: 'Opportunities', icon: Briefcase },
+  { path: '/app/mentorship', label: 'Career Guidance', icon: Users },
 ];
 
 export const UserLayout = () => {
@@ -37,9 +37,12 @@ export const UserLayout = () => {
         <div className="p-4 border-b">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+              <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold leading-tight">CorpReady</span>
+              <span className="text-[10px] text-muted-foreground -mt-0.5">Build Your Career</span>
+            </div>
           </Link>
         </div>
 
@@ -105,7 +108,7 @@ export const UserLayout = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search courses, topics..."
+                  placeholder="Search skills, opportunities..."
                   className="pl-10"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

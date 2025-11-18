@@ -42,55 +42,51 @@ const SignUp = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero p-12 flex-col justify-between text-white animate-gradient relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative z-10">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero p-12 flex-col justify-between text-white">
+        <div>
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl glass-dark flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
               <BookOpen className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold">CorpReady</span>
+            <span className="text-2xl font-bold">SkillPath India</span>
           </Link>
         </div>
-        <div className="relative z-10">
-          <h1 className="text-4xl font-bold mb-4">Transform Your Career Today</h1>
+        <div>
+          <h1 className="text-4xl font-bold mb-4">Start your journey today</h1>
           <p className="text-white/90 text-lg mb-8">
-            Join 500+ enterprises and 50,000+ professionals building future-ready skills.
+            Join 50,000+ students learning smarter with AI-powered courses.
           </p>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Free Trial Available</div>
-                <div className="text-white/80 text-sm">Experience premium training programs risk-free</div>
+                <div className="font-semibold mb-1">100% Free to Start</div>
+                <div className="text-white/80 text-sm">Access curated courses without any upfront cost</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Enterprise-Grade Learning</div>
-                <div className="text-white/80 text-sm">Access world-class training and skill assessments</div>
+                <div className="font-semibold mb-1">AI-Powered Curation</div>
+                <div className="text-white/80 text-sm">Get personalized learning paths based on your goals</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg glass-dark flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
                 ✓
               </div>
               <div>
-                <div className="font-semibold mb-1">Career Opportunities</div>
-                <div className="text-white/80 text-sm">Connect with top employers and advance your career</div>
+                <div className="font-semibold mb-1">Direct to Opportunities</div>
+                <div className="text-white/80 text-sm">Connect with internships from day one</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="text-white/60 text-sm relative z-10">© 2025 CorpReady by corpready.in. All rights reserved.</div>
+        <div className="text-white/60 text-sm">© 2025 SkillPath India. All rights reserved.</div>
       </div>
 
       {/* Right Side - Form */}
@@ -102,7 +98,7 @@ const SignUp = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">CorpReady</span>
+                <span className="text-xl font-bold">SkillPath India</span>
               </Link>
             </div>
             <h2 className="text-2xl font-bold mb-2">Create your account</h2>
