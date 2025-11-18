@@ -14,6 +14,8 @@ SkillPath India is a full-stack AI-powered learning platform that provides perso
 - Set up PostgreSQL database using Replit's built-in Neon database
 - Configured all required environment variables and secrets
 - Created unified startup script (`start.sh`) to run both backend and frontend
+- Fixed start.sh directory navigation using subshells to properly start both services
+- Verified authentication endpoints working correctly (tested admin login successfully)
 
 ## Project Architecture
 
@@ -91,8 +93,17 @@ The application auto-starts via the "SkillPath India" workflow which runs `bash 
 - **Frontend:** `cd coursera-path-main && npm install <package>`
 - **Backend:** `cd backend && npm install <package>`
 
+## Test Credentials
+The database has been seeded with test users for all roles:
+- **Admin:** admin@skillpath.com / Admin@123456
+- **Student:** student@skillpath.com / Student@123456
+- **Curator:** curator@skillpath.com / Curator@123456
+- **Operations:** ops@skillpath.com / Ops@123456
+- **Partner:** partner@skillpath.com / Partner@123456
+
 ## Notes
 - Frontend is configured to work with Replit's webview on port 5000
 - Backend API is accessible at `https://<replit-domain>/api/`
 - Database migrations use `prisma db push` (not migrate) for development
 - The app uses Express trust proxy for proper client IP detection behind Replit's proxy
+- Both frontend and backend run concurrently via start.sh using subshells
