@@ -129,7 +129,7 @@ class YouTubeService {
         message: string;
       }>('/youtube/config');
 
-      return response.configured;
+      return response.configured || false;
     } catch (error) {
       // Silently return false if backend is unavailable
       return false;
