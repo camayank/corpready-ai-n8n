@@ -16,9 +16,9 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: 'Verify Your Email - SkillPath India',
+    subject: 'Verify Your Email - CorpReady',
     html: `
-      <h1>Welcome to SkillPath India!</h1>
+      <h1>Welcome to CorpReady!</h1>
       <p>Click the link below to verify your email:</p>
       <a href="${verificationUrl}">${verificationUrl}</a>
       <p>This link will expire in 24 hours.</p>
@@ -32,7 +32,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: 'Reset Your Password - SkillPath India',
+    subject: 'Reset Your Password - CorpReady',
     html: `
       <h1>Password Reset Request</h1>
       <p>Click the link below to reset your password:</p>
