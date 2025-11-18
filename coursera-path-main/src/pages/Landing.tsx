@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  BookOpen,
   Sparkles,
   Trophy,
   Users,
@@ -16,6 +15,9 @@ import {
   Award,
   Briefcase,
   Star,
+  GraduationCap,
+  Zap,
+  Rocket,
 } from "lucide-react";
 
 const Landing = () => {
@@ -49,24 +51,24 @@ const Landing = () => {
   const steps = [
     {
       number: "01",
-      title: "AI Curates Your Path",
+      title: "AI-Powered Skill Mapping",
       description:
-        "Tell us your interests and goals. Our AI selects the perfect YouTube videos tailored just for you.",
-      icon: Sparkles,
+        "Tell us your career goals. Our AI creates a personalized learning path with the most relevant skills for your dream role.",
+      icon: Zap,
     },
     {
       number: "02",
-      title: "Learn & Prove Skills",
+      title: "Learn & Certify",
       description:
-        "Watch curated videos and complete AI-generated quizzes. Earn certificates that showcase your expertise.",
+        "Complete AI-curated courses and assessments. Earn industry-recognized certificates that prove your expertise to employers.",
       icon: Trophy,
     },
     {
       number: "03",
-      title: "Get Internships",
+      title: "Land Opportunities",
       description:
-        "Access matched internship opportunities from verified companies. Your skills open doors.",
-      icon: Briefcase,
+        "Access curated internships and job opportunities from top companies. Your verified skills open doors to success.",
+      icon: Rocket,
     },
   ];
 
@@ -76,15 +78,15 @@ const Landing = () => {
       role: "Computer Science Student",
       college: "Delhi University",
       quote:
-        "SkillPath helped me land my first internship in just 3 weeks! The AI-curated courses were exactly what I needed.",
+        "CorpReady transformed my career journey! The AI-curated learning path and verified certificates helped me land my dream internship in just 3 weeks.",
       rating: 5,
     },
     {
       name: "Arjun Patel",
-      role: "Marketing Enthusiast",
+      role: "Marketing Professional",
       college: "Mumbai University",
       quote:
-        "The personalized learning paths are incredible. I went from zero knowledge to a digital marketing internship.",
+        "From zero to corporate-ready! CorpReady's personalized approach helped me master digital marketing and secure a role at a top startup.",
       rating: 5,
     },
     {
@@ -92,41 +94,44 @@ const Landing = () => {
       role: "Engineering Graduate",
       college: "IIT Hyderabad",
       quote:
-        "The AI quizzes and certificates gave me confidence. Recruiters love the verified skills on my portfolio.",
+        "The AI-powered assessments and industry-recognized certificates gave me an edge. Recruiters were impressed with my verified skill portfolio!",
       rating: 5,
     },
   ];
 
   const stats = [
-    { value: "50k+", label: "Active Students" },
-    { value: "200+", label: "Curated Courses" },
-    { value: "1000+", label: "Internships" },
-    { value: "95%", label: "Success Rate" },
+    { value: "50k+", label: "Career Builders" },
+    { value: "200+", label: "Skill Programs" },
+    { value: "1000+", label: "Opportunities" },
+    { value: "95%", label: "Placement Success" },
   ];
 
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50 shadow-soft">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+              <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold">SkillPath India</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold leading-tight">CorpReady</span>
+              <span className="text-[9px] text-muted-foreground -mt-0.5">Build Your Career</span>
+            </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Courses
+            <Link to="#skills" className="text-sm font-medium hover:text-primary transition-colors">
+              Upskill
             </Link>
-            <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Internships
+            <Link to="#opportunities" className="text-sm font-medium hover:text-primary transition-colors">
+              Opportunities
             </Link>
-            <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Mentorship
+            <Link to="#mentorship" className="text-sm font-medium hover:text-primary transition-colors">
+              Career Guidance
             </Link>
-            <Link to="#" className="text-sm font-medium hover:text-primary transition-colors">
-              For Institutions
+            <Link to="#companies" className="text-sm font-medium hover:text-primary transition-colors">
+              For Companies
             </Link>
           </nav>
           <div className="flex items-center gap-3">
@@ -136,8 +141,8 @@ const Landing = () => {
               </Button>
             </Link>
             <Link to="/signup">
-              <Button variant="hero" size="sm">
-                Start Free
+              <Button variant="hero" size="sm" className="shadow-medium hover:shadow-large transition-shadow">
+                Get Started Free
               </Button>
             </Link>
           </div>
@@ -149,35 +154,36 @@ const Landing = () => {
         <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 bg-accent/10 text-accent border-accent/20">
-              🚀 AI-Powered Learning Platform for India
+            <Badge className="mb-6 bg-accent/10 text-accent border-accent/20 shadow-soft">
+              <Rocket className="w-3 h-3 inline mr-1" />
+              AI-Powered Corporate Readiness Platform
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Learn Fast. Prove Skills.
+              From Campus to
               <br />
-              <span className="bg-gradient-hero bg-clip-text text-transparent">Get Internships.</span>
+              <span className="bg-gradient-hero bg-clip-text text-transparent">Corporate Success</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              AI curates personalized micro-courses from YouTube videos. Complete quizzes, earn certificates, and connect
-              with verified internship opportunities.
+              Master in-demand skills with AI-curated learning paths. Earn verified certificates and land your dream
+              opportunities—all in one platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">
-                <Button variant="hero" size="lg" className="text-base px-8">
-                  Start Learning Free
-                  <ArrowRight className="ml-2" />
+                <Button variant="hero" size="lg" className="text-base px-8 shadow-medium hover:shadow-large transition-all">
+                  Start Your Journey
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="text-base px-8">
-                <Play className="mr-2" />
-                Watch Demo
+              <Button variant="outline" size="lg" className="text-base px-8 shadow-soft hover:shadow-medium transition-all">
+                <Play className="mr-2 w-5 h-5" />
+                See How It Works
               </Button>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
               {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
+                <div key={stat.label} className="text-center p-4 rounded-xl hover:bg-muted/50 transition-colors">
                   <div className="text-3xl md:text-4xl font-bold text-primary mb-1">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
